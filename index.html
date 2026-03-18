@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Claude Certified Architect 問題集</title>
+<meta name="description" content="Claude Certified Architect 試験対策の問題集。Agentic Architecture・Tool Design & MCP・Claude Code & Workflows・Prompt Engineering・Context Managementの5分野を収録。">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CCA問題集">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+    -webkit-text-size-adjust: 100%;
+  }
+  .header {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    color: white;
+    padding: 20px 24px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header p { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+
+  .home-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .home-card h2 { font-size: 1.2rem; margin-bottom: 8px; }
+  .home-card p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-box { background: var(--bg); border-radius: 8px; padding: 16px 8px; }
+  .stat-box .num { font-size: 1.6rem; font-weight: 700; color: var(--primary); }
+  .stat-box .label { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+
+  .domain-list { text-align: left; }
+  .domain-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .domain-btn:hover { border-color: var(--primary); background: #f5f3ff; }
+  .domain-btn > span:first-child { flex: 1; min-width: 0; text-align: left; }
+  .domain-btn .badge {
+    background: var(--primary);
+    color: white;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .btn:hover { background: var(--primary-dark); }
+  .btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  .btn-outline:hover { background: #f5f3ff; }
+
+  .quiz-count-btn {
+    padding: 8px 16px; border-radius: 20px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+  }
+  .quiz-count-btn.active { border-color: var(--primary); background: var(--primary); color: white; }
+
+  .progress-bar {
+    background: var(--border);
+    border-radius: 20px;
+    height: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: linear-gradient(90deg, #7c3aed, #4f46e5);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .question-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+  .question-info .domain-tag {
+    background: #f5f3ff;
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .question-card h3 {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    transition: all 0.2s;
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .option:hover:not(.disabled) { border-color: var(--primary); background: #f5f3ff; }
+  .option.selected { border-color: var(--primary); background: #ede9fe; }
+  .option.correct { border-color: var(--success); background: #dcfce7; }
+  .option.wrong { border-color: var(--danger); background: #fee2e2; }
+  .option.disabled { cursor: default; opacity: 0.85; }
+  .option-label { font-weight: 600; margin-right: 8px; }
+
+  .explanation {
+    background: #fefce8;
+    border-left: 4px solid var(--warning);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--warning); }
+  .bookmark-btn {
+    background: none; border: none; cursor: pointer; font-size: 1.3rem; padding: 4px 8px;
+    color: var(--text-light); transition: color 0.2s; -webkit-appearance: none; appearance: none;
+  }
+  .bookmark-btn.active { color: #f59e0b; }
+
+  .result-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+  }
+  .score-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+  }
+  .score-circle.pass { background: linear-gradient(135deg, var(--success), #15803d); }
+  .score-circle.fail { background: linear-gradient(135deg, var(--danger), #b91c1c); }
+  .score-circle small { font-size: 0.8rem; font-weight: 400; opacity: 0.9; }
+  .result-card h2 { margin-bottom: 8px; }
+  .result-card p { color: var(--text-light); margin-bottom: 24px; }
+  .btn-group { display: flex; gap: 12px; }
+  .btn-group .btn { flex: 1; }
+
+  .review-item {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    text-align: left;
+  }
+  .review-item .q-text { font-weight: 600; margin-bottom: 8px; line-height: 1.5; }
+  .review-item .answer-info { font-size: 0.85rem; line-height: 1.7; }
+  .review-item .correct-mark { color: var(--success); }
+  .review-item .wrong-mark { color: var(--danger); }
+
+  .hidden { display: none !important; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .screen-fade { animation: fadeIn 0.22s ease; }
+
+  .header.compact { padding: 10px 24px; padding-top: calc(10px + env(safe-area-inset-top)); }
+  .header.compact p { display: none; }
+  .header.compact h1 { font-size: 1.1rem; }
+
+  .quit-link {
+    display: block; width: 100%; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-size: 0.85rem; padding: 12px; margin-top: 4px;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .quit-link:hover { color: var(--danger); }
+
+  .stat-progress { margin-top: 12px; }
+  .stat-progress-track { background: var(--border); border-radius: 20px; height: 6px; overflow: hidden; }
+  .stat-progress-fill {
+    background: linear-gradient(90deg, #7c3aed, #4f46e5);
+    height: 100%; border-radius: 20px; transition: width 0.6s ease;
+  }
+  .stat-progress-label { font-size: 0.75rem; color: var(--text-light); }
+
+  .domain-breakdown { margin-top: 20px; text-align: left; }
+  .domain-breakdown h4 { font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px; font-weight: 600; }
+  .breakdown-row { margin-bottom: 7px; }
+  .breakdown-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-light); margin-bottom: 3px; }
+  .breakdown-track { background: var(--border); border-radius: 20px; height: 4px; overflow: hidden; }
+  .breakdown-fill { height: 100%; border-radius: 20px; transition: width 0.6s ease; }
+  .breakdown-fill.pass { background: var(--success); }
+  .breakdown-fill.fail { background: var(--danger); }
+
+  .stats-card { padding: 16px 20px 12px; }
+  .stats-card .stats-grid { margin-bottom: 0; }
+  .reset-link {
+    background: none; border: none; cursor: pointer; font-size: 0.78rem;
+    color: var(--text-light); text-decoration: underline; padding: 0;
+  }
+  .reset-link:hover { color: var(--danger); }
+  .section-label {
+    font-size: 0.78rem; font-weight: 600; color: var(--text-light);
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin: 4px 0 10px 4px;
+  }
+  .about-section { margin-top: 16px; border-top: 1px solid var(--border); }
+  .about-body { padding: 14px 4px 4px; font-size: 0.82rem; line-height: 1.8; color: var(--text-light); }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 24px;
+  }
+  .modal-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 28px 24px; max-width: 380px; width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .modal-card h3 { margin-bottom: 12px; font-size: 1.1rem; }
+  .modal-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; margin-bottom: 24px; }
+  .modal-btns { display: flex; gap: 10px; }
+  .modal-btns .btn { flex: 1; }
+
+  .dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --text-light: #94a3b8;
+    --border: #334155;
+    --success: #22c55e;
+    --danger: #f87171;
+  }
+  .dark .home-card, .dark .question-card, .dark .result-card, .dark .review-item { box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+  .dark .stat-box { background: #0f172a; }
+  .dark .option { background: #0f172a; }
+  .dark .option:hover:not(.disabled) { background: #334155; }
+  .dark .option.selected { background: #2e1065; border-color: #8b5cf6; }
+  .dark .option.correct { background: #14532d; border-color: var(--success); }
+  .dark .option.wrong { background: #7f1d1d; border-color: var(--danger); }
+  .dark .explanation { background: #422006; border-left-color: var(--warning); }
+  .dark .explanation strong { color: #fbbf24; }
+  .dark .domain-btn:hover { background: #334155; }
+  .dark .question-info .domain-tag { background: #2e1065; }
+  .dark .btn-outline { border-color: #8b5cf6; color: #c4b5fd; }
+  .dark .btn-outline:hover { background: #2e1065; }
+  .dark .quiz-count-btn { background: var(--card); color: var(--text); border-color: var(--border); }
+  .dark .quiz-count-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .dark .option.disabled { opacity: 1; }
+  .dark .score-circle.pass { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .dark .score-circle.fail { background: linear-gradient(135deg, #f87171, #dc2626); }
+  html.dark body { background: #0f172a; }
+
+  .dark-toggle {
+    background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 4px 8px;
+    color: rgba(255,255,255,0.85); position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    -webkit-appearance: none; appearance: none;
+  }
+
+  .toast {
+    position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(16px);
+    background: #1e293b; color: #fff; padding: 12px 20px; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 500; white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25); z-index: 9999;
+    opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .dark .toast { background: #334155; }
+</style>
+<script>(function(){var d=localStorage.getItem('cca-dark');if(d==='1'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark');})();</script>
+</head>
+<body>
+
+<div class="header" style="position:relative">
+  <h1>CCA 問題集</h1>
+  <p>Claude Certified Architect 試験対策</p>
+  <button class="dark-toggle" onclick="toggleDark()" title="ダークモード切替">&#9790;</button>
+</div>
+
+<div class="container">
+  <div id="home-screen">
+    <div class="home-card stats-card">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="num" id="stat-total">0</div>
+          <div class="label">総問題数</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="stat-answered">0</div>
+          <div class="label">回答済み</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="stat-rate">--%</div>
+          <div class="label">正答率</div>
+        </div>
+      </div>
+      <div class="stat-progress">
+        <div class="stat-progress-track"><div class="stat-progress-fill" id="stat-progress-fill" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+          <span class="stat-progress-label" id="stat-progress-label"></span>
+          <button class="reset-link" onclick="openResetModal()">成績をリセット</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-card">
+      <div style="margin-bottom:14px;text-align:center">
+        <label style="font-size:13px;color:var(--text-light);display:block;margin-bottom:8px">出題数</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+          <button class="quiz-count-btn active" onclick="setQuizCount(10)" data-count="10">10問</button>
+          <button class="quiz-count-btn" onclick="setQuizCount(20)" data-count="20">20問</button>
+          <button class="quiz-count-btn" onclick="setQuizCount(40)" data-count="40">40問</button>
+          <button class="quiz-count-btn" onclick="setQuizCount(0)" data-count="0">全問</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px">
+        <input type="checkbox" id="unanswered-first" checked style="width:18px;height:18px;accent-color:var(--primary)">
+        <label for="unanswered-first" style="font-size:14px;color:var(--text)">未回答の問題を優先出題</label>
+      </div>
+      <button class="btn" onclick="startQuiz('all')" style="margin-bottom:10px">全分野からランダム出題</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline" onclick="startQuiz('weak')" style="flex:1">弱点を復習</button>
+        <button class="btn btn-outline" onclick="startQuiz('bookmark')" style="flex:1">ブックマーク</button>
+      </div>
+    </div>
+
+    <div class="section-label">分野別</div>
+    <div id="domain-list" class="domain-list"></div>
+
+    <div class="about-section">
+      <div class="about-body">
+        Claude Certified Architect（CCA）は、Anthropic社のClaude APIを活用したアプリケーション設計・開発スキルを認定する資格です。本アプリはCCA試験の非公式練習問題集です（個人利用目的）。Agentic Architecture・Tool Design &amp; MCP・Claude Code &amp; Workflows・Prompt Engineering・Context Managementの5分野を収録。スマホ対応・オフライン利用可能。
+        <br><br>
+        <strong>試験情報</strong><br>
+        認定機関：Anthropic<br>
+        試験形式：選択式問題（オンライン）<br>
+        合格ライン：約70%以上の正答率<br>
+        公式情報：Anthropic公式サイトおよびdocs.anthropic.com参照<br><br>
+        <a href="https://anthropic.skilljar.com" target="_blank" rel="noopener" style="color:var(--primary);text-decoration:none;font-weight:600;">&#128279; anthropic.skilljar.com（公式試験サイト）</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="question-info">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="q-counter">1 / 10</span>
+        <span class="domain-tag" id="q-domain"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="bookmark-btn" id="bookmark-btn" onclick="onBookmarkClick()" title="ブックマーク">&#9734;</button>
+      </div>
+    </div>
+    <div class="question-card">
+      <h3 id="q-text"></h3>
+      <div id="q-options"></div>
+      <div class="explanation" id="q-explanation"></div>
+    </div>
+    <button class="btn" id="next-btn-bottom" onclick="nextQuestion()" style="display:none;margin-top:16px">次へ</button>
+    <button class="quit-link" onclick="quitQuiz()">中断してホームに戻る</button>
+  </div>
+
+  <div id="result-screen" class="hidden">
+    <div class="result-card">
+      <div class="score-circle" id="score-circle">
+        <span id="score-pct">0%</span>
+        <small id="score-detail">0/0</small>
+      </div>
+      <h2 id="result-title"></h2>
+      <p id="result-msg"></p>
+      <div id="domain-breakdown" class="domain-breakdown"></div>
+      <div class="btn-group">
+        <button class="btn" onclick="goHome()">ホームに戻る</button>
+        <button class="btn btn-outline" onclick="showReview()">復習する</button>
+        <button class="btn btn-outline" onclick="retryQuiz()">もう一度</button>
+      </div>
+    </div>
+    <div id="review-section" class="hidden"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="reset-modal" class="modal-overlay hidden" onclick="closeResetModal(event)">
+  <div class="modal-card">
+    <h3>成績をリセット</h3>
+    <p>これまでの回答履歴・正答率がすべて削除されます。この操作は元に戻せません。</p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeResetModal()">キャンセル</button>
+      <button class="btn" style="background:var(--danger)" onclick="confirmReset()">リセットする</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // ===== Agentic Architecture (22問) =====
+  {id:1,domain:"Agentic Architecture",question:"エージェントループの基本的な処理フローとして正しいものはどれですか？",options:["ユーザー入力を受け取り、即座に最終回答を返す","入力を受け取り、ツール使用の判断・実行・結果の観察を繰り返し、目標達成で終了する","常に固定回数だけツールを実行して終了する","人間の確認を毎ステップ必要とする"],correct:1,explanation:"エージェントループは「入力受け取り→ツール使用の判断→ツール実行→結果の観察→目標達成の判断」を繰り返すサイクルです。stop_reason=end_turnになるまで継続し、目標達成またはエラーで終了します。"},
+  {id:2,domain:"Agentic Architecture",question:"オーケストレーターとサブエージェントの役割として正しいものはどれですか？",options:["どちらも同じ役割を担い、互換的に使用できる","オーケストレーターはタスク全体の計画・指示を行い、サブエージェントが個別サブタスクを実行する","サブエージェントがオーケストレーターに指示を出す","オーケストレーターのみがツールを使用できる"],correct:1,explanation:"マルチエージェントシステムでは、オーケストレーター（上位エージェント）がゴールの分解・計画・サブエージェントへの指示を担い、サブエージェント（下位エージェント）が具体的なツール実行・情報収集・専門タスクを担当します。"},
+  {id:3,domain:"Agentic Architecture",question:"ReAct（Reasoning + Acting）パターンの説明として正しいものはどれですか？",options:["ReactのUIフレームワークをAIエージェントに応用したもの","Thought（推論）→ Action（ツール実行）→ Observation（結果観察）のサイクルを繰り返すエージェント設計パターン","複数モデルを並列実行して結果を統合する手法","強化学習でエージェントを訓練する手法"],correct:1,explanation:"ReActはThought（何をすべきか考える）→ Action（ツールを実行する）→ Observation（実行結果を観察する）のサイクルを繰り返すパターンです。拡張思考と組み合わせることで複雑なマルチステップタスクに対応できます。"},
+  {id:4,domain:"Agentic Architecture",question:"Human-in-the-Loop（ヒューマンインザループ）が特に重要になるのはどのような場面ですか？",options:["全てのステップで必ず人間確認が必要","定期的なステータスレポートの送信時","メール送信・DB更新・外部API呼び出しなど不可逆的・高リスクなアクションの実行前","テキスト生成のみのタスク実行時"],correct:2,explanation:"Anthropicは特に不可逆的・高リスクなアクション（データ削除・メール送信・金融取引・外部サービス呼び出しなど）の前に人間の確認を挟む設計を推奨しています。エージェントが確信を持てない場合も停止して確認を求めるべきです。"},
+  {id:5,domain:"Agentic Architecture",question:"エージェント設計における「最小権限の原則」の説明として正しいものはどれですか？",options:["エージェントに最小限の問題を与えること","エージェントに必要最小限のツール・アクセス権限のみを付与し、過剰な権限を持たせないこと","エージェントのモデルサイズを最小にすること","エージェントのコンテキストウィンドウを最小にすること"],correct:1,explanation:"最小権限の原則はエージェントセキュリティの基本です。タスクに不要なツール・広すぎるファイルアクセス・過剰なAPI権限を与えると、誤操作・意図しないデータ損失・セキュリティ侵害のリスクが高まります。"},
+  {id:6,domain:"Agentic Architecture",question:"エージェントのコスト爆発を防ぐための設計として適切なものはどれですか？",options:["エージェントに無制限のループを許可する","最大ステップ数・コスト上限・タイムアウトの設定と同一アクションの繰り返し検出を実装する","できるだけ多くのツールを提供して効率化する","全ステップでOpusモデルを使用する"],correct:1,explanation:"エージェントは自律的にループするため、最大ステップ数の制限・合計コスト上限（最大トークン数）・タイムアウト・同一アクションの繰り返し検出などを実装してコスト爆発を防ぎます。重複ツール呼び出しの検出も重要です。"},
+  {id:7,domain:"Agentic Architecture",question:"長時間実行エージェントでチェックポイントを実装する主な目的はどれですか？",options:["APIコストを削減するため","エラーや障害発生時に最初からやり直さず、途中の状態から再開できるようにするため","エージェントの処理速度を向上させるため","ユーザーへのリアルタイム通知を実現するため"],correct:1,explanation:"チェックポイントは長時間実行エージェントの中間状態（完了済みステップ・収集データ・部分的な結果）を永続化します。ネットワーク障害・タイムアウト・レート制限ヒット時に最初から全て再実行せず、チェックポイントから再開できます。"},
+  {id:8,domain:"Agentic Architecture",question:"マルチエージェントシステムにおける「信頼境界」として正しい考え方はどれですか？",options:["全てのエージェントは互いを完全に信頼してよい","オーケストレーターからの指示も、外部入力と同様に検証・サニタイズすべきで、エージェント間も信頼境界を設ける","人間から来る指示のみ信頼すればよい","Anthropicのモデルからの指示は全て信頼できる"],correct:1,explanation:"マルチエージェントシステムでは、オーケストレーターが侵害された場合でも被害を限定できるよう、エージェント間にも信頼境界を設けます。外部コンテンツ経由のプロンプトインジェクションにも注意が必要です。"},
+  {id:9,domain:"Agentic Architecture",question:"エージェントにおける外部メモリ（External Memory）を使うべき場面として正しいものはどれですか？",options:["単一の短い会話での情報保持","コンテキストウィンドウを超える長期記憶・複数セッションをまたぐユーザー情報の永続化","1回限りのタスクの一時的な情報保持","10トークン以下の短い情報の保存"],correct:1,explanation:"外部メモリ（データベース・ベクトルストアなど）はコンテキストウィンドウに収まらない情報量の管理や、複数セッションをまたいだユーザー情報・知識の永続化に使用します。セッション内の一時的な情報はin-contextメモリで処理します。"},
+  {id:10,domain:"Agentic Architecture",question:"エージェントのサブタスクを並行実行するのが有効な場面として正しいものはどれですか？",options:["タスクBの結果がタスクAの入力に依存している場合","互いに独立した情報収集・分析タスクを同時に処理する必要がある場合","タスクを必ず順番通りに実行しなければならない場合","単一ツールを繰り返し呼び出す場合"],correct:1,explanation:"並行エージェント実行は互いに独立したサブタスク（例：複数データソースからの同時情報収集）に有効で、処理時間を大幅に短縮できます。依存関係のあるタスクは順次実行が必要です。"},
+  {id:11,domain:"Agentic Architecture",question:"エージェントシステムにおけるオブザーバビリティ（可観測性）で追跡すべき情報として正しいものはどれですか？",options:["エージェントの見た目のみ","実行ステップ・ツール呼び出し履歴・コスト・エラー・レイテンシのトレーシング","ユーザーのIPアドレスのみ","最終出力のテキストのみ"],correct:1,explanation:"AIエージェントは複雑な自律動作をするため、各ステップの実行内容・ツール呼び出し・入出力・コスト・エラー・レイテンシをトレーシングシステム（LangSmith・Langfuse等）で追跡することが不具合特定・コスト管理・品質改善に不可欠です。"},
+  {id:12,domain:"Agentic Architecture",question:"エージェントが同じアクションを繰り返すループに陥った場合の適切な対応はどれですか？",options:["ループを検出しても継続させる","最大ループ回数に達したらエラーで停止し、ユーザーまたは上位システムにエスカレーションする","自動的に別のモデルに切り替える","メモリを全消去して最初からやり直す"],correct:1,explanation:"エージェントのループ検出は重要な安全機能です。同一ツール・同一引数の繰り返し呼び出しを検出し、最大回数到達時はエラーで停止・エスカレーションします。無限ループはコスト爆発とAPI制限超過を引き起こします。"},
+  {id:13,domain:"Agentic Architecture",question:"エージェントに与えるシステムプロンプトで特に重要な内容として適切なものはどれですか？",options:["エージェントの外見の説明","エージェントの目的・使用可能ツールの説明・禁止事項・不確かな場合の行動指針","実装コードの詳細","他のエージェントのAPIキー"],correct:1,explanation:"エージェントのシステムプロンプトには、①目的とゴールの明確な定義、②各ツールの用途・使用条件、③禁止されるアクション、④不確かな場合は確認を求める指示、⑤エラー時の対処指針を含めることが重要です。"},
+  {id:14,domain:"Agentic Architecture",question:"エージェントのハンドオフ（handoff）とはどのような仕組みですか？",options:["APIキーを別サービスに渡すこと","あるエージェントが処理の制御を別の専門エージェントに移転すること","タスクの結果をユーザーに返すこと","ツールの実行結果を次のツールに渡すこと"],correct:1,explanation:"ハンドオフはオーケストレーターが処理を専門サブエージェントに引き渡す機能です。例えばカスタマーサポートエージェントが技術的な質問を技術サポートエージェントに転送するパターンです。Anthropic Agent SDKで実装できます。"},
+  {id:15,domain:"Agentic Architecture",question:"エージェントの出力を検証（output validation）する目的として正しいものはどれですか？",options:["出力を長くするため","エージェントが有害・誤った・範囲外のアクションを実行しないよう確認し、問題があれば修正またはエスカレーションするため","APIコストを削減するため","出力速度を向上させるため"],correct:1,explanation:"出力検証はエージェントの安全性と信頼性の鍵です。ツール引数の妥当性確認・有害コンテンツチェック・ビジネスルール準拠の確認・期待フォーマットの検証を行い、問題があればエージェントに再試行させるか人間にエスカレーションします。"},
+  {id:16,domain:"Agentic Architecture",question:"長時間実行エージェントで「状態管理」が重要な理由として正しいものはどれですか？",options:["状態管理によりAPIコストが削減されるため","マルチステップタスクの進捗・中間結果・コンテキストを追跡し、途中再開・エラー回復を可能にするため","状態管理はAPIの応答速度を向上させるため","状態管理はセキュリティ要件のみで必要なため"],correct:1,explanation:"エージェントが複数ステップにわたるタスクを実行する場合、各ステップの状態・中間結果を永続化することで、エラー発生時の再開・途中からの実行継続・デバッグが可能になります。"},
+  {id:17,domain:"Agentic Architecture",question:"エージェントのフォールバック戦略として適切なものはどれですか？",options:["エラーが発生した場合は常に処理を停止する","一次ツールが失敗した場合に代替ツールや代替手段を試み、最終的に解決できない場合のみエスカレーションする","エラーを無視して次のステップに進む","エラーが発生したらユーザーに全詳細を報告する"],correct:1,explanation:"フォールバック戦略は①一次ツールの失敗時に代替ツールを試みる②リトライ（指数バックオフ）③簡略化したアプローチでの再試行④全て失敗した場合のみ人間にエスカレーション、という段階的な対応が理想的です。"},
+  {id:18,domain:"Agentic Architecture",question:"マルチエージェントが単一エージェントより優れているのはどのような場合ですか？",options:["常に単一エージェントの方が優れている","タスクが単一コンテキストに収まらない・並行処理が必要・専門化したエージェントが複数必要な場合","マルチエージェントはコストが常に安いため","マルチエージェントはAPIの制限を回避できるため"],correct:1,explanation:"マルチエージェントが有効なのは①タスクが単一コンテキストウィンドウに収まらないほど大規模、②サブタスクの並行実行で効率化できる、③専門知識を持つ複数エージェントが必要、という場合です。単純なタスクは単一エージェントの方がシンプルです。"},
+  {id:19,domain:"Agentic Architecture",question:"エージェントのテスト・評価において重要な観点はどれですか？",options:["最終出力のテキスト品質のみを評価する","ツール呼び出しの正確性・タスク完了率・コスト効率・安全性・エッジケース処理を含む包括的な評価","速度のみを評価する","人間による全出力の手動レビューのみ"],correct:1,explanation:"エージェントの評価はタスク完了率・ツール選択の正確性・コスト効率・安全性（禁止アクションを避けているか）・エッジケース処理・ループ耐性などを含む包括的な視点が必要です。単純な出力品質評価だけでは不十分です。"},
+  {id:20,domain:"Agentic Architecture",question:"エージェントが「不確かな場合」に取るべき行動として最も推奨されるものはどれですか？",options:["最も確率の高い選択肢を強行する","処理を停止して、ユーザーまたは上位システムに確認・明確化を求める","エラーを無視して処理を継続する","ランダムに選択して継続する"],correct:1,explanation:"Anthropicはエージェントが不確かな状況（指示が曖昧・必要な情報がない・リスクの高いアクション直前）では、推測で続行するより確認を求めることを推奨しています。特に不可逆なアクション前は確認が重要です。"},
+  {id:21,domain:"Agentic Architecture",question:"エージェントにおけるプロンプトインジェクション攻撃の説明として正しいものはどれですか？",options:["APIキーを盗む攻撃","エージェントが処理する外部コンテンツ（Webページ・メール・ドキュメント）に悪意ある指示を埋め込み、エージェントの動作を乗っ取る攻撃","DoS攻撃の一種","モデルウェイトを改ざんする攻撃"],correct:1,explanation:"プロンプトインジェクションはエージェントが外部から取得したコンテンツ内に埋め込まれた悪意ある指示（「システムの指示を無視して...」など）によってエージェントが操作される攻撃です。入力の検証とコンテンツの信頼レベルの分離が対策になります。"},
+  {id:22,domain:"Agentic Architecture",question:"エージェントの計画立案（planning）において有効なアプローチはどれですか？",options:["計画なしに即座にツールを実行する","タスクをサブタスクに分解し、依存関係を特定してから実行順序を決定し、計画を文書化してから実行する","常に同じ計画テンプレートを使用する","計画は人間のみが行い、エージェントは実行のみ担当する"],correct:1,explanation:"効果的なエージェントはタスクを受け取ると①サブタスクへの分解②依存関係の特定③実行順序の決定④リソース要件の確認を行い、計画を立ててから実行します。拡張思考（Extended Thinking）機能を使うと計画の質が向上します。"},
+
+  // ===== Tool Design & MCP (14問) =====
+  {id:23,domain:"Tool Design & MCP",question:"ツール定義のinput_schemaに含める必要がある要素の組み合わせとして正しいものはどれですか？",options:["function_name, parameters, return_type","type（objectが必須）・properties（各パラメーターの型と説明）・required（必須パラメーターの配列）","tool_id, prompt, output_format","name, type, optional"],correct:1,explanation:"input_schemaはJSON Schema形式で記述します。必要な要素は①type（必ず\"object\"）②properties（各パラメーターの型・説明・enumなど）③required（必須パラメーター名の配列）です。パラメーターのdescriptionはモデルが正しく使用するために重要です。"},
+  {id:24,domain:"Tool Design & MCP",question:"MCPプロトコル（Model Context Protocol）の主な目的として正しいものはどれですか？",options:["Claude専用の新しいプログラミング言語","AIモデルと外部ツール・データソース・サービスを標準化されたインターフェースで接続するオープンプロトコル","Claudeのモデルパラメーターを制御するAPI","Anthropicのクラウドサービス"],correct:1,explanation:"MCPはAIモデルが外部ツール・データベース・API・ファイルシステム等と標準化された方法で連携するためのオープンプロトコルです。MCPサーバーを実装することで、任意のサービスをAIエージェントのツールとして提供できます。"},
+  {id:25,domain:"Tool Design & MCP",question:"tool_choiceパラメーターの「any」設定の意味として正しいものはどれですか？",options:["モデルがツール使用か通常応答かを自動判断する","提供されたツールのいずれかを必ず使用する","特定のツールのみを使用する","ツールを使用しない"],correct:1,explanation:"tool_choice:{type:\"any\"}はモデルが提供されたツールのいずれかを必ず使用することを強制します。{type:\"auto\"}はモデルが自律判断、{type:\"tool\",name:\"...\"}は特定ツールを強制、{type:\"none\"}はツール不使用です。"},
+  {id:26,domain:"Tool Design & MCP",question:"ツールのdescriptionに含めるべき最も重要な情報はどれですか？",options:["ツールのソースコードの実装詳細","ツールが何をするか・いつ使うべきか・各パラメーターの意味・返却値の形式","ツールの作成日時とバージョン","ツールの価格情報"],correct:1,explanation:"ツールのdescriptionはモデルが「いつ・なぜ・どのように」ツールを使うかを判断する根拠です。①ツールの機能の明確な説明②使用するべき状況と使用すべきでない状況③各パラメーターの意味と有効な値の範囲④返却値の形式と解釈方法を含めることが重要です。"},
+  {id:27,domain:"Tool Design & MCP",question:"並行ツール呼び出し（Parallel Tool Use）において、複数のtool_useブロックが返された場合の正しい処理方法はどれですか？",options:["最初のツールのみ実行する","全ツールを順番に実行し、全結果をまとめて1つのtool_resultとして返す","各ツールを並行実行し、全ての結果を個別のtool_resultブロックとして同一メッセージに含めて返す","ランダムに1つのツールを選択して実行する"],correct:2,explanation:"並行ツール呼び出しでは、Claudeが複数のtool_useブロックを返した場合、それぞれを並行実行し、全ての結果を個別のtool_resultブロック（各tool_use_idに対応）として同一のrole:userメッセージに含めて返します。"},
+  {id:28,domain:"Tool Design & MCP",question:"tool_resultでエラーが発生した場合の正しい対応はどれですか？",options:["APIリクエスト自体をキャンセルする","is_error:trueフラグとエラーメッセージをtool_resultに含めてClaudeに返し、モデルに問題を通知する","エラーを無視して空のtool_resultを返す","新しい会話を開始する"],correct:1,explanation:"ツール実行でエラーが発生した場合、{type:\"tool_result\", tool_use_id:\"...\", is_error:true, content:\"エラー詳細\"}の形式でClaudeに返します。Claudeはエラー情報を受け取り、代替手段の提案や別のアプローチを試みます。"},
+  {id:29,domain:"Tool Design & MCP",question:"MCPサーバーが提供できるリソースの種類として正しいものはどれですか？",options:["ツールのみ","ツール（実行可能な関数）・リソース（ファイルやデータの読み取り）・プロンプト（再利用可能なプロンプトテンプレート）の3種類","APIキーのみ","モデルパラメーターのみ"],correct:1,explanation:"MCPサーバーは3種類のプリミティブを提供します。①ツール：モデルが呼び出せる実行可能な関数②リソース：ファイルシステム・データベース・APIなどのデータ読み取り③プロンプト：再利用可能なプロンプトテンプレートです。"},
+  {id:30,domain:"Tool Design & MCP",question:"MCPのトランスポート方式として提供されているものはどれですか？",options:["HTTPのみ","stdio（標準入出力）とSSE（Server-Sent Events）の2種類","WebSocketのみ","gRPCのみ"],correct:1,explanation:"MCPはローカルプロセス通信用のstdio（標準入出力）と、リモートサーバー向けのSSE（Server-Sent Events over HTTP）の2つのトランスポートをサポートします。stdioはCLIツールやローカルサーバーに、SSEはリモートサービス連携に使用します。"},
+  {id:31,domain:"Tool Design & MCP",question:"ツール設計で「粒度（granularity）」を適切に設定することが重要な理由はどれですか？",options:["ツール数が多いほど常に良い","ツールが細かすぎると多数の呼び出しが必要になり、粗すぎると柔軟性が失われる。タスクに適した粒度が重要","ツール数は1つに固定すべき","ツールは全て汎用的に設計すべき"],correct:1,explanation:"ツールの粒度は設計上の重要な判断です。粒度が細かすぎると多数の往復呼び出しが必要になり、粗すぎると特定の用途にしか使えず柔軟性が失われます。エージェントのユースケースに合わせた適切な粒度の設計が重要です。"},
+  {id:32,domain:"Tool Design & MCP",question:"構造化データ抽出にTool Useを活用する主な理由はどれですか？",options:["Tool UseはJSONのみを出力できるため","tool_choice=requiredで特定スキーマの呼び出しを強制でき、JSONコードブロックのパースより確実に構造化データを取得できるため","Tool Useを使うとトークン消費が減るため","Tool UseはRAGと組み合わせられないため"],correct:1,explanation:"Tool UseでJSON Schemaを定義しtool_choice:{type:\"tool\",name:\"extract\"}で呼び出しを強制することで、モデルが常に指定スキーマに従った構造化データを出力します。マークダウンのコードブロックをパースするより確実で、スキーマバリデーションも適用されます。"},
+  {id:33,domain:"Tool Design & MCP",question:"Computer Use機能のbashツールを使用する際の主なセキュリティリスクとして正しいものはどれですか？",options:["画像が表示できないこと","任意のシェルコマンドが実行できるため、サンドボックスなしでは危険なコマンドが実行されるリスクがある","メモリ使用量が増加すること","APIのレート制限が厳しくなること"],correct:1,explanation:"bashツールは任意のシェルコマンドを実行できるため、サンドボックス環境（コンテナ・仮想マシン）での実行が必須です。ファイル削除・ネットワーク操作・権限昇格などの危険なコマンドを適切に制限しないと重大なセキュリティリスクになります。"},
+  {id:34,domain:"Tool Design & MCP",question:"MCPサーバーをローカルClaude Codeで利用するための設定方法として正しいものはどれですか？",options:["環境変数にMCPサーバーのURLを設定する","~/.claude/settings.jsonのmcpServersセクションに、サーバー名・コマンド・引数・環境変数を記述する","Claude Codeのメニューから手動でMCPサーバーを起動する","Anthropicダッシュボードでの設定のみ可能"],correct:1,explanation:"Claude Codeでは~/.claude/settings.json（グローバル設定）または.claude/settings.json（プロジェクト設定）のmcpServersセクションにサーバー設定を記述します。command（起動コマンド）・args（引数）・env（環境変数）を指定します。"},
+  {id:35,domain:"Tool Design & MCP",question:"ツールのパラメーターにenum（列挙型）を使う主な利点はどれですか？",options:["コードの見た目が良くなる","モデルが有効な値の集合を把握でき、無効な入力を渡すリスクを減らせる","APIの処理速度が向上する","トークン消費量が減る"],correct:1,explanation:"enumを使うことで①モデルが許容される値の集合を事前に把握できる②無効な値の入力リスクが減る③APIやシステムへの無効なリクエストを防げる、という利点があります。例：{type:\"string\",enum:[\"low\",\"medium\",\"high\"]}"},
+  {id:36,domain:"Tool Design & MCP",question:"ツール実行の結果をClaudeに返す際、長い結果を処理する適切な方法はどれですか？",options:["常に全ての結果をそのまま返す","結果が長すぎる場合はトリミング・要約・重要部分の抽出を行い、コンテキストウィンドウを効率的に使用する","長い結果は全て破棄する","長い結果は別のAPIエンドポイントに送る"],correct:1,explanation:"ツールの返却値が長すぎるとコンテキストウィンドウを圧迫し、後続の処理精度が低下します。必要な情報に絞ったトリミング・要約・ページネーション・参照IDによる遅延ロードなどで効率的なコンテキスト使用を実現します。"},
+
+  // ===== Claude Code & Workflows (16問) =====
+  {id:37,domain:"Claude Code & Workflows",question:"CLAUDE.mdファイルの主な役割として正しいものはどれですか？",options:["Claudeのモデルウェイトを保存するファイル","プロジェクト固有のコンテキスト・規約・カスタム指示をClaude Codeに提供するMarkdownファイル","Claude CodeのAPIキーを保存するファイル","TypeScriptの型定義ファイル"],correct:1,explanation:"CLAUDE.mdはプロジェクトルートに置くMarkdownファイルで、Claude Codeが自動的に読み込みます。プロジェクトの概要・コーディング規約・ビルド手順・カスタム指示・よく使うコマンドなどを記述し、セッションをまたいで一貫したコンテキストを提供します。"},
+  {id:38,domain:"Claude Code & Workflows",question:"Claude Codeのsettings.jsonで設定できる主な内容として正しいものはどれですか？",options:["モデルのウェイトパラメーター","許可・拒否ツールリスト・MCPサーバー設定・環境変数・hooks設定","ユーザーのパスワード","APIの請求設定"],correct:1,explanation:"settings.jsonでは①permissions.allow/deny（ツール実行の許可・拒否リスト）②mcpServers（MCPサーバー設定）③env（環境変数）④hooks（イベントフック設定）⑤model（使用モデルの指定）などを設定できます。~/.claude/（グローバル）と.claude/（プロジェクト）に配置できます。"},
+  {id:39,domain:"Claude Code & Workflows",question:"Claude Codeのhooks機能の説明として正しいものはどれですか？",options:["Webサーバーのイベントフック","ツール実行・セッション開始などのライフサイクルイベントに応じて任意のシェルコマンドを自動実行する仕組み","Gitのpre-commitフックのみ","Claude Codeのエラー検出システム"],correct:1,explanation:"hooksはClaude Codeのライフサイクルイベント（PreToolUse・PostToolUse・Stop・SubagentStop等）に任意のシェルコマンドを紐付けます。コードフォーマット自動実行・テスト自動実行・監査ログ記録・承認フローの実装などに活用できます。"},
+  {id:40,domain:"Claude Code & Workflows",question:"Claude Codeで/compactコマンドを使用する主な目的はどれですか？",options:["コードをコンパクトに圧縮する","長くなった会話履歴を要約してコンテキストウィンドウを効率化し、セッションを継続できるようにする","ファイルを圧縮する","テストを実行する"],correct:1,explanation:"/compactはClaude Codeの会話履歴が長くなりコンテキストウィンドウが満杯に近づいた場合に、履歴を要約してウィンドウを解放するコマンドです。重要なコンテキストを維持しながらセッションを継続できます。"},
+  {id:41,domain:"Claude Code & Workflows",question:"Claude CodeのCIパイプライン統合で--printフラグを使う理由として正しいものはどれですか？",options:["デバッグ情報を表示するため","非インタラクティブモードで実行し、標準出力に結果を返すため（CI/CDでの自動化に必要）","高速モードで実行するため","ログを保存するため"],correct:1,explanation:"claude --printまたはclaude -pは非インタラクティブモードで実行し、結果を標準出力に返します。CI/CDパイプラインでの自動化（GitHub Actions・Jenkins等）での利用に必要で、インタラクティブなUIなしで出力をパイプやリダイレクトで扱えます。"},
+  {id:42,domain:"Claude Code & Workflows",question:"Claude Codeのパーミッションシステムにおいて「許可リスト（allow list）」と「拒否リスト（deny list）」の優先順位として正しいものはどれですか？",options:["許可リストが拒否リストより常に優先される","拒否リストが許可リストより優先される","どちらも同じ優先度で競合する","設定順序によって決まる"],correct:1,explanation:"Claude Codeのパーミッションシステムでは拒否リスト（deny）が許可リスト（allow）より優先されます。両方に同じパターンが存在する場合は拒否が優先されるため、セキュリティ上重要なツールは明示的に拒否リストに追加することで確実にブロックできます。"},
+  {id:43,domain:"Claude Code & Workflows",question:"Claude Codeのサブエージェント機能を使う主な利点はどれですか？",options:["コードをデバッグするため","独立したタスクを並行実行し、メインコンテキストウィンドウを汚染せずに処理できるため","ファイルを圧縮するため","APIコストを無料にするため"],correct:1,explanation:"Claude Codeのサブエージェント（Subagent）は独立したコンテキストを持つ並行実行エージェントです。メインセッションのコンテキストを汚染せず、独立したタスク（コードレビュー・テスト生成・ドキュメント作成等）を並行処理し、結果をメインセッションに統合できます。"},
+  {id:44,domain:"Claude Code & Workflows",question:"CLAUDE.mdに記述すべき内容として最も適切なものはどれですか？",options:["APIキーやシークレット情報","プロジェクトのアーキテクチャ概要・コーディング規約・ビルドコマンド・テスト実行方法・重要な制約事項","個人の連絡先情報","請求に関する情報"],correct:1,explanation:"CLAUDE.mdに記述すべき内容：①プロジェクト概要とアーキテクチャ②コーディング規約（言語・フレームワーク・スタイル）③ビルド・テスト・デプロイコマンド④重要な制約（変更してはいけないファイル等）⑤よく使うコマンドのリファレンスです。APIキーは絶対に記述しません。"},
+  {id:45,domain:"Claude Code & Workflows",question:"Claude Code SDKを使ったプログラム的な利用で正しい説明はどれですか？",options:["SDKはGUI操作のみサポートする","TS/Python SDKを通じてClaude Codeをプログラムから呼び出し、カスタムエージェントワークフローや自動化パイプラインを構築できる","SDKはWindowsのみサポートする","SDKはAPIキーなしで使用できる"],correct:1,explanation:"Claude Code SDKはTypeScript/Python向けに提供され、Claude Codeをプログラムから呼び出してカスタムエージェントワークフロー・CI/CD統合・自動化パイプラインを構築できます。サブエージェントとしての利用や複数のClaude Codeインスタンスの並行管理も可能です。"},
+  {id:46,domain:"Claude Code & Workflows",question:"Claude Codeのメモリ管理において「プロジェクトメモリ」と「グローバルメモリ」の違いとして正しいものはどれですか？",options:["どちらも同じ場所に保存される","プロジェクトメモリは.claude/CLAUDE.mdで特定プロジェクト向け、グローバルメモリは~/.claude/CLAUDE.mdで全プロジェクト共通","プロジェクトメモリはクラウドに保存される","グローバルメモリはAPI経由でのみ設定できる"],correct:1,explanation:"Claude Codeのメモリは①~/.claude/CLAUDE.md（グローバル：全プロジェクト共通の設定・好み）②.claude/CLAUDE.md（プロジェクト：プロジェクト固有の設定、Gitで共有可能）の2階層で管理されます。両方が存在する場合は両方が読み込まれます。"},
+  {id:47,domain:"Claude Code & Workflows",question:"Claude CodeのGitHub Actions連携において推奨される認証方法はどれですか？",options:["ソースコードにAPIキーをハードコードする","GitHub SecretsにANTHROPIC_API_KEYを格納し、ワークフローYAMLで環境変数として参照する","APIキーをGitリポジトリのREADMEに記載する","APIキーなしで実行する"],correct:1,explanation:"CI/CD連携ではAPIキーを直接コードに埋め込まず、GitHub Secrets（またはAWS Secrets Manager等）に格納して環境変数として参照します。ANTHROPIC_API_KEYという環境変数名が標準です。シークレットはログに表示されず安全に管理されます。"},
+  {id:48,domain:"Claude Code & Workflows",question:"Claude Codeでカスタムスラッシュコマンドを作成する方法として正しいものはどれですか？",options:["Anthropicのダッシュボードで登録する","~/.claude/commands/（グローバル）または.claude/commands/（プロジェクト）ディレクトリにMarkdownファイルを配置する","settings.jsonのcommandsセクションに記述する","Pythonスクリプトとして.pyファイルに記述する"],correct:1,explanation:"カスタムスラッシュコマンドはMarkdownファイルをcommands/ディレクトリに配置することで作成されます。ファイル名がコマンド名になり（例：review.mdで/review）、ファイルの内容がプロンプトテンプレートになります。$ARGUMENTSで引数を参照できます。"},
+  {id:49,domain:"Claude Code & Workflows",question:"Claude Codeのhooksで「PreToolUse」イベントを活用する典型的なユースケースはどれですか？",options:["テスト実行後にレポートを生成する","危険なツール実行（rm・DB削除等）の前に確認プロンプトを表示したり、自動承認/拒否のロジックを実装する","コードのコンパイル結果を表示する","APIの使用量を記録する"],correct:1,explanation:"PreToolUseフックはツール実行直前に起動するため、①危険なコマンドの実行前に確認を求める②セキュリティポリシーに基づく自動拒否③監査ログへのツール呼び出し記録④特定ツールの引数を検証して問題があれば中止、といった用途に活用できます。"},
+  {id:50,domain:"Claude Code & Workflows",question:"Claude Codeを使ったワークフロー自動化で「claude -p」（printモード）の標準的な使い方として正しいものはどれですか？",options:["インタラクティブモードでの使用","シェルスクリプトやMakefileからコマンドラインで呼び出し、出力をファイルに保存したりパイプで次の処理に渡す","GUIアプリケーションの起動","APIドキュメントの表示"],correct:1,explanation:"claude -p（printモード）はシェルスクリプト・Makefile・GitHub Actionsワークフローから利用でき、プロンプトを引数で渡して結果を標準出力に取得します。例：claude -p \"コードレビューして\" < file.py > review.txt のようにパイプ処理が可能です。"},
+  {id:51,domain:"Claude Code & Workflows",question:"プロジェクトの.claude/settings.jsonでモデルを指定する目的として正しいものはどれですか？",options:["APIコストを増やすため","プロジェクトメンバー全員が同じモデルを使用するよう統一し、動作の一貫性を確保するため","Anthropicへのモデル変更申請のため","個人のモデル設定を上書きするため"],correct:1,explanation:"プロジェクト設定でモデルを指定することで、チームメンバー全員が同じモデルを使用することが保証されます。特に本番環境と同じモデルで開発・テストしたい場合や、特定モデルのみで動作検証が完了している場合に重要です。"},
+  {id:52,domain:"Claude Code & Workflows",question:"Claude Codeの「ワークツリー（worktree）」分離機能を使う主な利点はどれですか？",options:["ファイルを圧縮するため","独立したGitワークツリーでエージェントを実行し、メインブランチへの影響を避けながら実験的な変更を試みられること","コードを自動デプロイするため","テストを並行実行するため"],correct:1,explanation:"ワークツリー分離はGitのworktree機能を使い、エージェントが独立した作業コピーで動作します。メインブランチのコードを汚染せず、実験的な変更・大規模リファクタリング・複数の独立した機能開発を安全に並行実行できます。"},
+
+  // ===== Prompt Engineering (16問) =====
+  {id:53,domain:"Prompt Engineering",question:"システムプロンプト（system parameter）の主な役割として正しいものはどれですか？",options:["ユーザーの最初のメッセージを指す","モデルの役割・振る舞い・制約・出力形式を会話全体を通じて設定する上位指示","APIキーと一緒に送るメタ情報","各ターンの会話履歴を保存する仕組み"],correct:1,explanation:"システムプロンプトはモデルの役割・振る舞い・応答スタイル・制約・出力形式を設定する最上位の指示で、会話全体を通じて有効です。ユーザーメッセージに先行して処理され、モデルのベース動作を定義します。キャラクター設定・ルール定義・応答形式の統一に活用されます。"},
+  {id:54,domain:"Prompt Engineering",question:"Few-shotプロンプティングの効果的な活用場面として正しいものはどれですか？",options:["プロンプトをできるだけ短くしたい場合","期待する出力フォーマット・スタイル・分類基準を例示することで、同じパターンでの回答を誘導したい場合","モデルの速度を上げたい場合","コストを削減したい場合"],correct:1,explanation:"Few-shotプロンプティングは入出力のサンプルを数例プロンプトに含めることで、モデルが同じパターンで回答するよう誘導する手法です。特に特定のフォーマット・スタイル・分類基準・ドメイン固有の表現を学習させる場合に効果的です。"},
+  {id:55,domain:"Prompt Engineering",question:"Chain-of-Thought（CoT）プロンプティングが特に効果的な場面はどれですか？",options:["単純な事実の検索","数学的計算・論理的推論・多段階の問題解決など、段階的な推論が必要なタスク","短い文の翻訳","画像の説明"],correct:1,explanation:"CoTは「ステップバイステップで考えてください」という指示でモデルに推論過程を示させます。特に数学的計算・論理パズル・多段階の因果推論・複雑な計画立案などで大幅な精度向上が見られます。単純なタスクではオーバーヘッドになる場合があります。"},
+  {id:56,domain:"Prompt Engineering",question:"ClaudeのプロンプトでXMLタグが効果的な理由として正しいものはどれですか？",options:["XMLはHTMLより読みやすいため","ClaudeはXML形式のデータで学習されており、XMLタグによる構造の区切りを明確に認識できるため","XMLタグを使うとトークン数が減るため","XMLはセキュリティ上安全なフォーマットであるため"],correct:1,explanation:"ClaudeはXML形式のデータで大量に学習しており、<document>・<instructions>・<example>などのタグによる構造化を明確に認識します。複数コンテンツブロックの明確な分離・指示の優先度明示・出力形式の指定に特に有効です。"},
+  {id:57,domain:"Prompt Engineering",question:"プロンプトにおける「Prefill（事前充填）」技法の説明として正しいものはどれですか？",options:["システムプロンプトを事前に生成する技法","assistantロールのメッセージに書き始めを提供することで、特定のフォーマット・スタイルでClaudeに出力を継続させる技法","ツールの引数を事前に設定する技法","キャッシュを事前に温める技法"],correct:1,explanation:"Prefillはmessages配列の最後にrole:assistantのメッセージ（書き始め）を含めることで、Claudeがその続きを生成します。例えば{\"role\":\"assistant\",\"content\":\"{\"} とすると、ClaudeはJSONオブジェクトとして続きを生成します。"},
+  {id:58,domain:"Prompt Engineering",question:"temperatureパラメーターについて正しい説明はどれですか？",options:["temperatureが高いほど決定論的な出力になる","temperatureが低いほど（0に近いほど）一貫性が高く、高いほど多様でランダムな出力になる","temperatureはレスポンス速度を制御する","temperatureはコンテキストウィンドウのサイズを制御する"],correct:1,explanation:"temperatureは出力のランダム性を制御します。temperature=0に近いほど最も確率の高いトークンを選択し決定論的になります（コーディング・事実確認に適切）。temperature=1に近いほど多様でランダムな出力になります（創作・ブレインストーミングに適切）。"},
+  {id:59,domain:"Prompt Engineering",question:"プロンプトで「否定的指示（〜しないでください）」より「肯定的指示（〜してください）」が推奨される理由として正しいものはどれですか？",options:["否定的指示はトークン数が多くなるため","肯定的指示は期待する動作を明確に定義でき、モデルが何をすべきかを理解しやすいため","否定的指示はAPIエラーを引き起こすため","肯定的指示の方が短くなるため"],correct:1,explanation:"「〜しないでください」という否定指示は何をしてほしいのかが不明確です。「〜の代わりに〜してください」と期待する行動を具体的に指定することで、モデルの理解が明確になります。ただし禁止事項として否定的指示が必要な場合もあります。"},
+  {id:60,domain:"Prompt Engineering",question:"stop_sequencesパラメーターの主な用途として正しいものはどれですか？",options:["モデルの処理を一時停止する","指定した文字列が出力に現れた時点で生成を停止するカスタム終端条件を設定する","エラー発生時の停止条件を定義する","会話を終了するコマンドを設定する"],correct:1,explanation:"stop_sequencesは特定の文字列（例：[\"\\n\\nHuman:\", \"</response>\"]）が生成された時点で出力を停止させます。マルチターンのFew-shotプロンプトでの応答境界制御・XMLタグによる出力の打ち切り・構造化出力での終了条件定義に使用します。"},
+  {id:61,domain:"Prompt Engineering",question:"構造化出力をJSONで安定的に得るためのベストプラクティスとして正しいものはどれですか？",options:["「JSONで答えてください」とだけ指示する","Tool Useで厳密なJSONスキーマを定義するか、PrefillでJSONの書き始めを提供し、システムプロンプトでスキーマを明示する","temperature=0に固定する","max_tokensを最大にする"],correct:1,explanation:"構造化JSON出力を安定して得るには①Tool Useで厳密なスキーマを定義してtool_choice=requiredで強制②Prefillで\"{\"を提供③システムプロンプトでスキーマを明示しサンプルを提示、の組み合わせが効果的です。Tool Useが最も確実です。"},
+  {id:62,domain:"Prompt Engineering",question:"プロンプトキャッシング（Prompt Caching）を効果的に活用できる場面として正しいものはどれですか？",options:["1回のみ使用する短いプロンプト","長いシステムプロンプト・大きなドキュメント・コードベースなど繰り返し使用する長いコンテンツ","出力の品質を向上させたい場合","ストリーミング速度を上げたい場合"],correct:1,explanation:"プロンプトキャッシングは繰り返し使用される長いコンテンツ（長いシステムプロンプト・参照ドキュメント・コードベース等）に効果的で、2回目以降のキャッシュヒット時に入力コストを最大90%削減し、レイテンシも低減します。"},
+  {id:63,domain:"Prompt Engineering",question:"役割（ペルソナ）をシステムプロンプトでClaudeに与える主な効果として正しいものはどれですか？",options:["モデルのAPIコストが削減される","特定の専門領域・スタイル・視点での回答品質と一貫性が向上する","レスポンス速度が向上する","コンテキストウィンドウが拡張される"],correct:1,explanation:"「あなたはシニアソフトウェアエンジニアです」のように役割を与えることで、その分野の専門的な語彙・視点・推論スタイル・スタンスに沿った回答が得られます。カスタマーサポート・コードレビュー・法務アドバイスなど専門性が必要な場面で効果的です。"},
+  {id:64,domain:"Prompt Engineering",question:"「Lost in the Middle」問題に対するプロンプト設計の対策として正しいものはどれですか？",options:["プロンプトをできるだけ長くする","最重要な情報や指示をプロンプトの最初または最後に配置する","情報をアルファベット順に並べる","情報を中央に配置する"],correct:1,explanation:"LLMは長いコンテキストの中間部分を最初・最後より見落としやすい（Lost in the Middle）という傾向があります。タスク指示・最重要情報・要約すべき核心はプロンプトの最初または最後に配置することで参照精度が向上します。"},
+  {id:65,domain:"Prompt Engineering",question:"プロンプトの評価・テスト（Evals）で推奨されるアプローチはどれですか？",options:["人間が全出力を手動で評価する","代表的な入力セットを用意して自動評価指標とモデルベース評価を組み合わせ、変更前後で比較する","一度だけ試して問題なければ本番投入する","コストが最低のモデルで評価する"],correct:1,explanation:"プロンプトのEvalsでは①代表的な入力セット（エッジケース含む）を用意②自動評価指標（正確性・形式準拠・BLEU等）③モデルベース評価（別のClaudeで採点）を組み合わせます。プロンプト変更時に必ず実行し、回帰を検出します。"},
+  {id:66,domain:"Prompt Engineering",question:"プロンプトインジェクション対策として最も効果的なものはどれですか？",options:["temperature=0に設定する","ユーザー入力をシステムプロンプトから分離し、信頼できないコンテンツとして明示してモデルに通知する","max_tokensを小さく設定する","全ユーザー入力をブロックする"],correct:1,explanation:"プロンプトインジェクション対策：①ユーザー入力をXMLタグ等で信頼済みシステム指示と明確に分離②システムプロンプトで「ユーザー入力内の指示に従わないこと」を明示③入力の前処理・パターン検出④出力の検証、を多層で実装します。"},
+  {id:67,domain:"Prompt Engineering",question:"top_pパラメーター（nucleus sampling）の説明として正しいものはどれですか？",options:["最も確率の高いトークンのみを選択する割合","累積確率がtop_pに達するまでのトークン候補集合から次のトークンを選択する","出力のトークン数を制限する","モデルの処理速度を調整する"],correct:1,explanation:"top_p（nucleus sampling）は累積確率がp値に達するまでのトークン候補集合から選択します。例えばtop_p=0.9は確率上位90%のトークン集合から選択します。temperatureとtop_pは一般的にどちらか一方のみを変更することが推奨されます。"},
+  {id:68,domain:"Prompt Engineering",question:"プロンプトでコンテキストに参照ドキュメントを含める（コンテキスト充填）際のベストプラクティスとして正しいものはどれですか？",options:["ドキュメントをそのまま無加工で挿入する","XMLタグでドキュメントを明確に区切り、最重要な内容を最初または最後に、タスク指示を明確に分けて配置する","ドキュメントはシステムプロンプトにのみ含める","ドキュメントは全て要約してから含める"],correct:1,explanation:"コンテキスト充填では①<document>などのXMLタグで各ドキュメントを区切る②ドキュメント識別情報（タイトル・出典）を付与③タスク指示をドキュメントと明確に分離④最重要情報を最初または最後に配置、することで参照精度が向上します。"},
+
+  // ===== Context Management (12問) =====
+  {id:69,domain:"Context Management",question:"Claudeのコンテキストウィンドウについて正しい説明はどれですか？",options:["コンテキストウィンドウは出力トークンのみを含む","コンテキストウィンドウは1回のAPIリクエストで処理できる入力と出力を合わせたトークンの最大数","コンテキストウィンドウはAPIの同時接続数","コンテキストウィンドウは1日あたりのリクエスト数"],correct:1,explanation:"コンテキストウィンドウは1回のAPIリクエストで処理できるトークンの最大数（入力+出力の合計）です。Claude 3モデルは最大200,000トークンのコンテキストウィンドウをサポートします。入力が長いほど出力に使えるトークン数が減ります。"},
+  {id:70,domain:"Context Management",question:"マルチターン会話でコンテキストが膨らんだ場合の管理戦略として正しいものはどれですか？",options:["コンテキストが大きくなったらセッションを終了する","会話の要約・古いメッセージのトリミング・重要情報のみの保持などでコンテキストサイズを管理しながら会話を継続する","全ての会話履歴を必ず保持する","コンテキストが大きくなったら新しいモデルに切り替える"],correct:1,explanation:"長い会話のコンテキスト管理では①古いメッセージを要約に置き換える②重要でない交換を削除する③プロンプトキャッシングで繰り返し参照を効率化④/compact（Claude Codeの場合）で会話を要約する、などの戦略を組み合わせます。"},
+  {id:71,domain:"Context Management",question:"「Lost in the Middle」現象の説明として正しいものはどれですか？",options:["会話の最初の内容を忘れること","LLMが長いコンテキストの中間部分を最初・最後の部分より見落としやすいという特性","APIがタイムアウトする現象","コンテキストウィンドウが満杯になること"],correct:1,explanation:"Lost in the Middle現象は、LLMが長いコンテキストを処理する際、冒頭と末尾の情報は良く参照するが、中間部分の情報を見落としやすいという研究で示された特性です。重要な情報は最初か最後に配置することで対策できます。"},
+  {id:72,domain:"Context Management",question:"RAG（Retrieval-Augmented Generation）をコンテキスト管理に使う主な理由はどれですか？",options:["モデルのウェイトを更新するため","コンテキストウィンドウに全ドキュメントを詰め込まず、関連する情報のみを検索してコンテキストに追加することで効率化するため","APIコストを固定化するため","出力の速度を向上させるため"],correct:1,explanation:"RAGはベクトルデータベース等で外部知識を管理し、クエリに関連する情報のみをコンテキストに動的に追加します。大規模なドキュメントベース全体をコンテキストに含めるコストと制限を回避しながら、必要な情報のみを効率的に提供できます。"},
+  {id:73,domain:"Context Management",question:"プロンプトキャッシングのキャッシュブレークポイントを設定する際の重要な注意点はどれですか？",options:["任意の場所に無制限に設定できる","変わらない長いコンテンツの末尾に設定し、最小トークン数要件（モデルにより1024〜2048トークン）を満たす必要がある","キャッシュポイントを設定するとコストが増加する","キャッシュはシステムプロンプトにのみ使用できる"],correct:1,explanation:"プロンプトキャッシングの設定では①キャッシュは変わらないコンテンツの末尾に設置②最小トークン数要件（Claude 3 Sonnet/Opusで1024、Haikuで2048）を下回るとキャッシュされない③動的に変わるコンテンツの前には設置しない、が重要です。"},
+  {id:74,domain:"Context Management",question:"コンテキストウィンドウが満杯になりそうな場合のエスカレーション戦略として正しいものはどれですか？",options:["エラーが発生するまで何もしない","コンテキストサイズを監視し、上限の70〜80%に達したら自動的に要約・圧縮またはユーザーへの通知を行う","常に最大コンテキストを使用する","全会話履歴を削除して新しい会話を開始する"],correct:1,explanation:"コンテキスト管理のエスカレーション戦略では①APIレスポンスのusage情報でコンテキスト使用量を監視②使用率が閾値（70〜80%）を超えたら自動要約・圧縮を実行③ユーザーへの通知または/compactコマンドの誘導④必要に応じて外部ストレージへの履歴保存を行います。"},
+  {id:75,domain:"Context Management",question:"大規模なコードベースをClaudeで処理する際のコンテキスト効率化として正しいものはどれですか？",options:["全ファイルを一度にコンテキストに含める","関連ファイルのみを動的に選択・RAGで関連コードを検索・プロンプトキャッシングでよく参照するファイルをキャッシュする","コードを1行ずつ処理する","ファイルを結合して1つの大きなファイルにする"],correct:1,explanation:"大規模コードベースの処理では①タスクに関連するファイルのみを選択してコンテキストに含める②ベクトルDBでコードをインデックス化してRAGで関連コードを検索③頻繁に参照するファイル（共通ユーティリティ等）をプロンプトキャッシングでキャッシュ、が効果的です。"},
+  {id:76,domain:"Context Management",question:"マルチターン会話でAPIがステートレスであることの意味として正しいものはどれですか？",options:["APIが複数のユーザーを同時にサポートできないこと","サーバー側に会話履歴が保存されず、各リクエストに全会話履歴を含める必要があること","APIキーがセッションをまたいで変わること","APIがキャッシュを使用しないこと"],correct:1,explanation:"AnthropicのAPIはステートレスで、サーバー側に会話状態が保存されません。マルチターン会話ではクライアント側でmessages配列（role:userとrole:assistantが交互）を管理し、各リクエストに全履歴を含めて送ります。会話が長くなるほどトークン消費が増えます。"},
+  {id:77,domain:"Context Management",question:"トークン数を事前に見積もるための正しい方法はどれですか？",options:["文字数を2で割る","Anthropicが提供するトークナイザー（tokencount API）またはSDKのcount_tokensメソッドを使用する","バイト数から計算する","文章の行数を数える"],correct:1,explanation:"正確なトークン数の見積もりにはAnthropicのtokencount API（/v1/messages/count_tokens）またはSDKのcount_tokensメソッドを使用します。英語は平均約3〜4文字/トークン、日本語は1文字が複数トークンになることが多いため、実際のAPIで計測が最も正確です。"},
+  {id:78,domain:"Context Management",question:"会話の要約（Summarization）をコンテキスト管理に使う場合の注意点として正しいものはどれですか？",options:["要約すれば全ての情報が完全に保持される","要約により細部や具体的な事実が失われる可能性があるため、重要な決定事項・数値・固有名詞は要約後も保持する","要約は使用しない方が常に良い","要約は自動で完璧に行われる"],correct:1,explanation:"会話の要約は細部・具体的な数値・固有名詞・決定事項の詳細を失う可能性があります。対策として①重要な事実は箇条書きで明示的に保持②要約の品質を定期的に検証③要約後に重要な情報が失われていないか確認④重要な交換は要約から除外する、などが必要です。"},
+  {id:79,domain:"Context Management",question:"ストリーミングとコンテキスト管理の関係として正しいものはどれですか？",options:["ストリーミングを使うとコンテキストウィンドウが増える","ストリーミングは出力の表示を高速化するが、生成されたトークン数（使用コンテキスト）は変わらない","ストリーミングを使うとコンテキストが削減される","ストリーミングはコンテキスト管理と無関係"],correct:1,explanation:"ストリーミングはFirst Token Time（最初のトークンまでの時間）を短縮し、ユーザー体験を向上させますが、最終的に生成されるトークン数（コンテキスト使用量とコスト）はストリーミングの有無に関係なく同じです。コンテキスト管理の観点では違いはありません。"},
+  {id:80,domain:"Context Management",question:"コンテキストウィンドウの信頼性に関して、長いコンテキストで注意すべきことはどれですか？",options:["長いコンテキストでは常に精度が向上する","長いコンテキストでは中間部分の参照精度が低下する・処理コストが増加する・レイテンシが増大するトレードオフがある","コンテキストが長いほどコストは変わらない","長いコンテキストではエラーが発生しない"],correct:1,explanation:"長いコンテキストには①Lost in the Middle問題による中間部分の参照精度低下②入力トークンコストの増加③レイテンシ（Time to First Token）の増大、というトレードオフがあります。必要最小限のコンテキストを使い、RAGや要約で管理するのが実践的です。"}
+];
+
+let stats = { answered: {}, correct: {} };
+let bookmarks = [];
+let quizState = { questions: [], current: 0, answers: [], mode: '' };
+let lastQuiz = { questions: [], mode: 'all' };
+let selectedQuizCount = 10;
+let reviewShown = false;
+
+function loadData() {
+  const s = localStorage.getItem('cca-stats');
+  if (s) { try { stats = JSON.parse(s); } catch(e) { stats = { answered: {}, correct: {} }; } }
+  const b = localStorage.getItem('cca-bookmarks');
+  if (b) { try { bookmarks = JSON.parse(b); } catch(e) { bookmarks = []; } }
+}
+
+function safeSet(key, val) {
+  try { localStorage.setItem(key, val); } catch(e) {}
+}
+
+function saveStats() { safeSet('cca-stats', JSON.stringify(stats)); }
+function saveBookmarks() { safeSet('cca-bookmarks', JSON.stringify(bookmarks)); }
+
+function toggleDark() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  safeSet('cca-dark', isDark ? '1' : '0');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function updateHome() {
+  const total = questions.length;
+  const answered = Object.keys(stats.answered).length;
+  const correct = Object.values(stats.correct).filter(v => v > 0).length;
+  const rate = answered > 0 ? Math.round(correct / answered * 100) : null;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-rate').textContent = rate !== null ? rate + '%' : '--%';
+  const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+  document.getElementById('stat-progress-fill').style.width = pct + '%';
+  document.getElementById('stat-progress-label').textContent = answered + ' / ' + total + '問 (' + pct + '%)';
+
+  const domains = [...new Set(questions.map(q => q.domain))];
+  const dl = document.getElementById('domain-list');
+  dl.innerHTML = '';
+  domains.forEach(function(d) {
+    const dqs = questions.filter(q => q.domain === d);
+    const dAns = dqs.filter(q => (stats.answered[q.id] || 0) > 0).length;
+    const dCor = dqs.filter(q => (stats.correct[q.id] || 0) > 0).length;
+    const dRate = dAns > 0 ? Math.round(dCor / dAns * 100) : -1;
+    const btn = document.createElement('button');
+    btn.className = 'domain-btn';
+    const rateHtml = dRate >= 0
+      ? ' <span style="font-size:0.72rem;padding:2px 8px;border-radius:10px;margin-left:6px;background:' +
+        (dRate >= 70 ? '#dcfce7;color:#16a34a' : '#fee2e2;color:#dc2626') + '">' + dRate + '%</span>'
+      : '';
+    btn.innerHTML = '<span>' + d + rateHtml + '</span><span class="badge">' + dqs.length + '問</span>';
+    btn.onclick = function() { startQuiz(d); };
+    dl.appendChild(btn);
+  });
+}
+
+function setQuizCount(n) {
+  selectedQuizCount = n;
+  document.querySelectorAll('.quiz-count-btn').forEach(function(b) {
+    b.classList.toggle('active', parseInt(b.dataset.count) === n);
+  });
+}
+
+function startQuiz(mode) {
+  const uFirst = document.getElementById('unanswered-first').checked;
+  const limit = selectedQuizCount;
+  let pool = [];
+
+  if (mode === 'all') {
+    if (uFirst) {
+      const un = shuffle(questions.filter(q => !stats.answered[q.id]));
+      const an = shuffle(questions.filter(q => stats.answered[q.id]));
+      pool = [...un, ...an];
+    } else {
+      pool = shuffle([...questions]);
+    }
+    if (limit > 0) pool = pool.slice(0, limit);
+  } else if (mode === 'bookmark') {
+    pool = shuffle(questions.filter(q => bookmarks.includes(q.id)));
+    if (pool.length === 0) { showToast('ブックマークがありません'); return; }
+    if (limit > 0) pool = pool.slice(0, limit);
+  } else if (mode === 'weak') {
+    pool = shuffle(questions.filter(function(q) {
+      const a = stats.answered[q.id] || 0;
+      const c = stats.correct[q.id] || 0;
+      return a === 0 || (c / a) < 0.7;
+    }));
+    if (pool.length === 0) { showToast('弱点問題はありません'); return; }
+    if (limit > 0) pool = pool.slice(0, limit);
+  } else {
+    const dqs = questions.filter(q => q.domain === mode);
+    if (uFirst) {
+      pool = [...shuffle(dqs.filter(q => !stats.answered[q.id])), ...shuffle(dqs.filter(q => stats.answered[q.id]))];
+    } else {
+      pool = shuffle(dqs);
+    }
+    if (limit > 0) pool = pool.slice(0, limit);
+  }
+
+  quizState = { questions: pool, current: 0, answers: [], mode: mode };
+  reviewShown = false;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  window.scrollTo(0, 0);
+  const q = quizState.questions[quizState.current];
+  const total = quizState.questions.length;
+  const idx = quizState.current;
+  document.getElementById('progress-fill').style.width = ((idx + 1) / total * 100) + '%';
+  document.getElementById('q-counter').textContent = (idx + 1) + ' / ' + total;
+  document.getElementById('q-domain').textContent = q.domain;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('q-explanation').className = 'explanation';
+  document.getElementById('next-btn-bottom').style.display = 'none';
+  const bmBtn = document.getElementById('bookmark-btn');
+  bmBtn.innerHTML = bookmarks.includes(q.id) ? '&#9733;' : '&#9734;';
+  bmBtn.classList.toggle('active', bookmarks.includes(q.id));
+  const optDiv = document.getElementById('q-options');
+  optDiv.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  q.options.forEach(function(opt, i) {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    const span = document.createElement('span');
+    span.className = 'option-label';
+    span.textContent = labels[i] + '.';
+    btn.appendChild(span);
+    btn.appendChild(document.createTextNode(opt));
+    btn.onclick = function() { selectAnswer(i); };
+    optDiv.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx) {
+  const q = quizState.questions[quizState.current];
+  const options = document.querySelectorAll('#q-options .option');
+  if (options[0].classList.contains('disabled')) return;
+  options.forEach(function(o, i) {
+    o.classList.add('disabled');
+    if (i === q.correct) o.classList.add('correct');
+    if (i === idx && idx !== q.correct) o.classList.add('wrong');
+  });
+  const isCorrect = idx === q.correct;
+  quizState.answers.push({ questionId: q.id, selected: idx, correct: isCorrect });
+  stats.answered[q.id] = (stats.answered[q.id] || 0) + 1;
+  if (isCorrect) stats.correct[q.id] = (stats.correct[q.id] || 0) + 1;
+  saveStats();
+  const exp = document.getElementById('q-explanation');
+  exp.innerHTML = '<strong>解説：</strong>' + q.explanation;
+  exp.className = 'explanation show';
+  const isLast = quizState.current >= quizState.questions.length - 1;
+  const nextBtn = document.getElementById('next-btn-bottom');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = isLast ? '結果を見る' : '次へ';
+}
+
+function nextQuestion() {
+  quizState.current++;
+  if (quizState.current >= quizState.questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function quitQuiz() {
+  if (confirm('中断してホームに戻りますか？')) goHome();
+}
+
+function onBookmarkClick() {
+  const q = quizState.questions[quizState.current];
+  const i = bookmarks.indexOf(q.id);
+  if (i >= 0) bookmarks.splice(i, 1); else bookmarks.push(q.id);
+  saveBookmarks();
+  const bmBtn = document.getElementById('bookmark-btn');
+  bmBtn.innerHTML = bookmarks.includes(q.id) ? '&#9733;' : '&#9734;';
+  bmBtn.classList.toggle('active', bookmarks.includes(q.id));
+  showToast(bookmarks.includes(q.id) ? 'ブックマークに追加' : 'ブックマークを解除');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (document.getElementById('quiz-screen').classList.contains('hidden')) return;
+  if (e.key === 'ArrowRight' && document.getElementById('next-btn-bottom').style.display !== 'none') nextQuestion();
+  if (['1','2','3','4'].includes(e.key)) {
+    const i = parseInt(e.key) - 1;
+    const opts = document.querySelectorAll('#q-options .option');
+    if (opts.length > i && !opts[0].classList.contains('disabled')) selectAnswer(i);
+  }
+});
+
+function showResult() {
+  showScreen('result');
+  const total = quizState.answers.length;
+  const correctCount = quizState.answers.filter(a => a.correct).length;
+  const pct = Math.round(correctCount / total * 100);
+  const circle = document.getElementById('score-circle');
+  circle.className = 'score-circle ' + (pct >= 70 ? 'pass' : 'fail');
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-detail').textContent = correctCount + '/' + total;
+  document.getElementById('result-title').textContent = pct >= 70 ? '合格ライン達成' : 'もう少し頑張ろう';
+  document.getElementById('result-msg').textContent = pct >= 70
+    ? '素晴らしい成績です。他の分野も練習しましょう。'
+    : '苦手問題を中心に復習しましょう。合格ラインは70%です。';
+  if (pct === 100) {
+    const end = Date.now() + 3000;
+    (function frame() {
+      confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+      confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }
+  lastQuiz = { questions: quizState.questions.slice(), mode: quizState.mode };
+  const bd = document.getElementById('domain-breakdown');
+  bd.innerHTML = '';
+  const da = {};
+  quizState.answers.forEach(function(a, i) {
+    const d = quizState.questions[i].domain;
+    if (!da[d]) da[d] = { correct: 0, total: 0 };
+    da[d].total++;
+    if (a.correct) da[d].correct++;
+  });
+  const doms = Object.keys(da);
+  if (doms.length > 1) {
+    bd.innerHTML = '<h4>分野別結果</h4>';
+    doms.forEach(function(d) {
+      const c = da[d].correct, t = da[d].total;
+      const p = Math.round(c / t * 100);
+      const row = document.createElement('div');
+      row.className = 'breakdown-row';
+      row.innerHTML = '<div class="breakdown-label"><span>' + d + '</span><span>' + c + '/' + t + ' (' + p + '%)</span></div>'
+        + '<div class="breakdown-track"><div class="breakdown-fill ' + (p >= 70 ? 'pass' : 'fail') + '" style="width:' + p + '%"></div></div>';
+      bd.appendChild(row);
+    });
+  }
+  document.getElementById('review-section').innerHTML = '';
+  document.getElementById('review-section').classList.add('hidden');
+  reviewShown = false;
+}
+
+function showReview() {
+  reviewShown = !reviewShown;
+  const sec = document.getElementById('review-section');
+  if (reviewShown) {
+    sec.innerHTML = '';
+    quizState.answers.forEach(function(a, i) {
+      const q = quizState.questions[i];
+      const item = document.createElement('div');
+      item.className = 'review-item';
+      const labels = ['A', 'B', 'C', 'D'];
+      item.innerHTML = '<div class="q-text">Q' + (i+1) + '. ' + q.question + '</div>'
+        + '<div class="answer-info">'
+        + (a.correct
+          ? '<span class="correct-mark">正解: ' + labels[a.selected] + '. ' + q.options[a.selected] + '</span>'
+          : '<span class="wrong-mark">誤答: ' + labels[a.selected] + '. ' + q.options[a.selected] + '</span><br>'
+            + '<span class="correct-mark">正解: ' + labels[q.correct] + '. ' + q.options[q.correct] + '</span>')
+        + '<br><small style="color:var(--text-light)">' + q.explanation + '</small>'
+        + '</div>';
+      sec.appendChild(item);
+    });
+    sec.classList.remove('hidden');
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    sec.classList.add('hidden');
+  }
+}
+
+function retryQuiz() {
+  quizState = { questions: shuffle([...lastQuiz.questions]), current: 0, answers: [], mode: lastQuiz.mode };
+  reviewShown = false;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function goHome() {
+  showScreen('home');
+  updateHome();
+}
+
+function showScreen(name) {
+  ['home', 'quiz', 'result'].forEach(function(s) {
+    const el = document.getElementById(s + '-screen');
+    const isTarget = s === name;
+    el.classList.toggle('hidden', !isTarget);
+    if (isTarget) {
+      el.classList.remove('screen-fade');
+      void el.offsetWidth;
+      el.classList.add('screen-fade');
+    }
+  });
+  const header = document.getElementById ? null : null;
+  const h = document.querySelector('.header');
+  if (h) h.classList.toggle('compact', name !== 'home');
+}
+
+function openResetModal() { document.getElementById('reset-modal').classList.remove('hidden'); }
+function closeResetModal(e) {
+  if (!e || e.target === e.currentTarget) document.getElementById('reset-modal').classList.add('hidden');
+}
+function confirmReset() {
+  stats = { answered: {}, correct: {} };
+  bookmarks = [];
+  saveStats();
+  saveBookmarks();
+  updateHome();
+  closeResetModal();
+  showToast('成績をリセットしました');
+}
+
+// Init
+loadData();
+updateHome();
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function() {});
+}
+</script>
+</body>
+</html>
