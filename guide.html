@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>試験ガイド | Claude Certified Architect 問題集</title>
+<meta name="description" content="Claude Certified Architect 試験の出題範囲・ドメイン別ポイント・学習法の完全ガイド">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+    -webkit-text-size-adjust: 100%;
+  }
+  .dark { background: #0f172a; color: #e2e8f0; }
+  .dark body { background: #0f172a; color: #e2e8f0; }
+  html.dark { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --text-light: #94a3b8; --border: #334155; }
+
+  .header {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    color: white;
+    padding: 20px 24px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .header h1 { font-size: 1.3rem; font-weight: 700; }
+  .header p { font-size: 0.82rem; opacity: 0.85; margin-top: 4px; }
+  .header-nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 10px;
+  }
+  .header-nav a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.82rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: background 0.2s;
+  }
+  .header-nav a:hover { background: rgba(255,255,255,0.15); }
+  .header-nav a.active { background: rgba(255,255,255,0.2); color: #fff; }
+  .dark-toggle {
+    background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 4px 8px;
+    color: rgba(255,255,255,0.85); position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+
+  .section {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 16px 0 8px;
+  }
+  .section p { font-size: 0.9rem; line-height: 1.7; color: var(--text-light); margin-bottom: 10px; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* 試験概要カード */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .info-item {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .info-item .label { font-size: 0.75rem; color: var(--text-light); margin-bottom: 4px; }
+  .info-item .value { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+
+  /* ドメインテーブル */
+  .domain-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 8px; }
+  .domain-table th {
+    background: var(--primary);
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .domain-table th:last-child { text-align: center; }
+  .domain-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .domain-table tr:last-child td { border-bottom: none; }
+  .domain-table tr:nth-child(even) td { background: var(--bg); }
+  .domain-table .pct {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  /* ドメイン詳細 */
+  .domain-card {
+    border-left: 4px solid var(--primary);
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+  }
+  .domain-card:last-child { margin-bottom: 0; }
+  .domain-card .domain-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .domain-card .domain-pct {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+  .domain-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .domain-card ul li {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    padding: 2px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+  .domain-card ul li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* サンプル問題 */
+  .sample-q {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .sample-q .q-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .sample-q .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .sample-q .option.correct {
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 600;
+  }
+  .dark .sample-q .option.correct { background: #14532d; color: #86efac; }
+  .sample-q .option.wrong { color: var(--text-light); }
+  .sample-q .opt-label { font-weight: 700; flex-shrink: 0; }
+  .sample-q .explanation {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #ede9fe;
+    border-radius: 6px;
+    font-size: 0.83rem;
+    color: #5b21b6;
+    line-height: 1.6;
+  }
+  .dark .sample-q .explanation { background: #2e1065; color: #c4b5fd; }
+
+  /* ポイント */
+  .tip-list { list-style: none; padding: 0; }
+  .tip-list li {
+    padding: 10px 12px 10px 36px;
+    position: relative;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-light);
+  }
+  .tip-list li:last-child { border-bottom: none; }
+  .tip-list li::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 8px;
+    top: 11px;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 20px;
+  }
+
+  /* 合格スコア */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* リンク */
+  .link-btn {
+    display: block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .link-btn:hover { border-color: var(--primary); background: #ede9fe; }
+  .dark .link-btn:hover { background: #2e1065; }
+  .link-btn .link-title { font-weight: 600; }
+  .link-btn .link-desc { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+  /* back to quiz */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 8px 0;
+    margin-bottom: 16px;
+  }
+</style>
+<script>(function(){var d=localStorage.getItem('cca-dark');if(d==='1'||(d===null&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark');})();</script>
+</head>
+<body>
+
+<div class="header" style="position:relative">
+  <h1>CCA 問題集</h1>
+  <p>Claude Certified Architect 試験対策</p>
+  <button class="dark-toggle" onclick="toggleDark()" title="ダークモード切替">&#9790;</button>
+  <nav class="header-nav">
+    <a href="./index.html">問題集</a>
+    <a href="./guide.html" class="active">試験ガイド</a>
+  </nav>
+</div>
+
+<div class="container">
+
+  <!-- 試験概要 -->
+  <div class="section">
+    <h2>試験概要</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">試験名</div>
+        <div class="value">CCA – Foundations</div>
+      </div>
+      <div class="info-item">
+        <div class="label">認定機関</div>
+        <div class="value">Anthropic</div>
+      </div>
+      <div class="info-item">
+        <div class="label">問題数 / 試験時間</div>
+        <div class="value">60問 / 120分</div>
+      </div>
+      <div class="info-item">
+        <div class="label">受験形式</div>
+        <div class="value">オンライン・監視付き</div>
+      </div>
+      <div class="info-item">
+        <div class="label">合格スコア</div>
+        <div class="value">720 / 1000点</div>
+      </div>
+      <div class="info-item">
+        <div class="label">受験料</div>
+        <div class="value">$99（一般）</div>
+      </div>
+    </div>
+    <p>Anthropicが提供する初の公式技術認定資格。単なるプロンプトエンジニアリングではなく、Claudeを使って現実の複雑な課題を解決するための実践的設計能力を評価します。ソリューションアーキテクト・AI実装エンジニアが対象です。</p>
+  </div>
+
+  <!-- 出題ドメイン -->
+  <div class="section">
+    <h2>出題ドメインと配分</h2>
+    <table class="domain-table">
+      <thead>
+        <tr>
+          <th>ドメイン</th>
+          <th>内容</th>
+          <th>比率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Agentic Architecture</strong></td>
+          <td>エージェントループ・マルチエージェント設計</td>
+          <td class="pct">27%</td>
+        </tr>
+        <tr>
+          <td><strong>Tool Design & MCP</strong></td>
+          <td>MCPサーバー統合・ツール設計</td>
+          <td class="pct">18%</td>
+        </tr>
+        <tr>
+          <td><strong>Claude Code & Workflows</strong></td>
+          <td>CLAUDE.md設定・CI/CD連携</td>
+          <td class="pct">20%</td>
+        </tr>
+        <tr>
+          <td><strong>Prompt Engineering</strong></td>
+          <td>構造化出力・Few-shot・JSONスキーマ</td>
+          <td class="pct">20%</td>
+        </tr>
+        <tr>
+          <td><strong>Context Management</strong></td>
+          <td>ウィンドウ管理・信頼性・エスカレーション</td>
+          <td class="pct">15%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ドメイン別ポイント -->
+  <div class="section">
+    <h2>ドメイン別 重要ポイント</h2>
+
+    <div class="domain-card">
+      <div class="domain-title">Agentic Architecture <span class="domain-pct">27%</span></div>
+      <ul>
+        <li>ハブ&スポーク型マルチエージェント設計（コーディネーター＋専門サブエージェント）</li>
+        <li>ReActパターン：Thought → Action → Observation のサイクル</li>
+        <li>サブエージェントは親コンテキストを自動継承しない — 必要情報は明示的に渡す</li>
+        <li>最小権限の原則：タスクに必要最小限のツール・権限のみ付与</li>
+        <li>Human-in-the-Loop：不可逆・高リスクなアクション前に人間確認</li>
+        <li>コスト爆発防止：最大ステップ数・タイムアウト・ループ検出を実装</li>
+        <li>プロンプトインジェクション対策：外部コンテンツからの指示を隔離</li>
+      </ul>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-title">Tool Design & MCP <span class="domain-pct">18%</span></div>
+      <ul>
+        <li>ツール説明文がLLMの選択判断を左右する最重要要素（Few-shotより効果的）</li>
+        <li>input_schemaはJSON Schema形式：type・properties・requiredを必ず定義</li>
+        <li>MCP設定：<code>.mcp.json</code>（プロジェクト共有）と<code>~/.claude.json</code>（個人用）</li>
+        <li>エラー設計：<code>is_error:true</code> フラグと詳細メッセージでClaudeに通知</li>
+        <li>並行ツール呼び出し：全結果を個別の<code>tool_result</code>ブロックで同一メッセージに返す</li>
+        <li>ツールの粒度：細かすぎず粗すぎず、ユースケースに適した設計</li>
+        <li>長い結果はトリミング・要約でコンテキストウィンドウを節約</li>
+      </ul>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-title">Claude Code & Workflows <span class="domain-pct">20%</span></div>
+      <ul>
+        <li><code>CLAUDE.md</code>：プロジェクトルールをClaude Codeに自動読み込みさせる設定ファイル</li>
+        <li><code>.claude/rules/</code>：パス別制約を自動適用</li>
+        <li>Planモード（大規模変更）vs 直接実行（単純タスク）の使い分け</li>
+        <li>Hooksで PreToolUse / PostToolUse / Stop イベントにシェルコマンドを紐付け</li>
+        <li>拒否リストが許可リストより優先される（セキュリティ上重要）</li>
+        <li><code>claude -p</code>（printモード）でCI/CDパイプラインに組み込み</li>
+        <li>カスタムスラッシュコマンド：<code>.claude/commands/</code>にMarkdownファイルを配置</li>
+      </ul>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-title">Prompt Engineering <span class="domain-pct">20%</span></div>
+      <ul>
+        <li>XMLタグによる構造化：Claudeはタグの区切りを明確に認識</li>
+        <li>Prefill技法：assistantロールの書き始めを提供して出力形式を強制</li>
+        <li>Chain-of-Thought：多段階推論・計算・論理パズルで精度向上</li>
+        <li>JSONスキーマ活用 + tool_choice=required で構造化出力を確実に取得</li>
+        <li>否定指示より肯定指示：「何をしてほしいか」を明確に定義</li>
+        <li>Lost in the Middle対策：重要情報はプロンプトの最初か最後に配置</li>
+        <li>プロンプトキャッシング：繰り返し使う長いコンテンツでコスト最大90%削減</li>
+      </ul>
+    </div>
+
+    <div class="domain-card">
+      <div class="domain-title">Context Management <span class="domain-pct">15%</span></div>
+      <ul>
+        <li>APIはステートレス：各リクエストに全会話履歴を含める必要がある</li>
+        <li>コンテキスト上限70〜80%到達時に自動要約・圧縮を実装</li>
+        <li>RAG：大規模ドキュメントから関連部分のみを動的に取得</li>
+        <li>要約時は重要な数値・固有名詞・決定事項を明示的に保持</li>
+        <li>プロンプトキャッシュのブレークポイント：最小トークン数要件を確認</li>
+        <li>ストリーミングはコンテキスト使用量に影響しない</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- サンプル問題 -->
+  <div class="section">
+    <h2>サンプル問題</h2>
+
+    <div class="sample-q">
+      <div class="q-text">エージェントが <code>lookup_order</code> と <code>get_customer</code> を頻繁に混同します。最初に取るべき対策はどれですか？</div>
+      <div class="option wrong"><span class="opt-label">A</span> Few-shotサンプルを5〜8個追加する</div>
+      <div class="option correct"><span class="opt-label">B</span> ツール説明文を拡張して詳細な説明を記述する</div>
+      <div class="option wrong"><span class="opt-label">C</span> キーワードベースのルーティングロジックを実装する</div>
+      <div class="option wrong"><span class="opt-label">D</span> 2つのツールを1つに統合する</div>
+      <div class="explanation">ツール説明はLLMがツールを選択する主要メカニズムです。説明の充実は「低労力・高効果」であり、Few-shotより先に試みるべき対策です。</div>
+    </div>
+
+    <div class="sample-q">
+      <div class="q-text">マルチエージェントシステムで、サブエージェントが正しく動作するために必ず行うべきことはどれですか？</div>
+      <div class="option wrong"><span class="opt-label">A</span> 親エージェントと同じモデルを使用する</div>
+      <div class="option wrong"><span class="opt-label">B</span> 親エージェントのコンテキストを自動的に引き継ぐ設定を有効にする</div>
+      <div class="option correct"><span class="opt-label">C</span> タスクに必要な情報を明示的にサブエージェントに渡す</div>
+      <div class="option wrong"><span class="opt-label">D</span> サブエージェントに全ツールへのアクセス権を付与する</div>
+      <div class="explanation">サブエージェントは親コンテキストを自動継承しません。コーディネーターはサブタスクに必要な情報（データ・指示・制約）を明示的に渡す設計が必須です。</div>
+    </div>
+  </div>
+
+  <!-- 合格のための学習ステップ -->
+  <div class="section">
+    <h2>推奨学習ステップ</h2>
+    <ul class="tip-list">
+      <li data-num="1">Anthropic公式ドキュメント（docs.anthropic.com）でエージェント設計・MCP・Claude Codeの基礎を習得する</li>
+      <li data-num="2">MCPサーバーを実際に構築する（GitHub APIやSlack APIをMCP化するのが効果的）</li>
+      <li data-num="3">Agent SDKでマルチエージェントを実装し、コンテキスト引き継ぎを体験する</li>
+      <li data-num="4">CLAUDE.mdを実プロジェクトで最適化し、パス別制約の自動適用を試す</li>
+      <li data-num="5">本問題集でドメイン別の弱点を特定し、集中的に復習する</li>
+      <li data-num="6">サンプル問題・模擬試験で時間配分（120分・60問）を体感する</li>
+    </ul>
+  </div>
+
+  <!-- 試験の核心テーマ -->
+  <div class="section">
+    <h2>試験が評価する3つの視点</h2>
+
+    <h3>1. 確率論から決定論へ</h3>
+    <p>LLMにプロンプトで指示するだけでなく、条件チェックやバリデーションをコードで実装する「確定的な制御」を重視。重要なビジネスロジックはプログラムで固定する。</p>
+
+    <h3>2. MCPの真価はセマンティックインターフェース</h3>
+    <p>MCPは単なるツール連携ではなく、AIがサービスの意味を理解して使えるインターフェース。ツールの説明・スキーマ・エラー設計がLLMの判断精度を左右する。</p>
+
+    <h3>3. 運用設計（本番環境の現実）</h3>
+    <p>コンテキストの劣化・エラー回復・コスト管理・セキュリティを含む「本番環境での信頼性」まで問われる。試験は開発者ではなくアーキテクトとしての責任を評価する。</p>
+  </div>
+
+  <!-- 公式リンク -->
+  <div class="section">
+    <h2>公式リソース</h2>
+    <a href="https://anthropic.skilljar.com" target="_blank" rel="noopener" class="link-btn">
+      <span style="font-size:1.2rem">&#127941;</span>
+      <div>
+        <div class="link-title">anthropic.skilljar.com</div>
+        <div class="link-desc">CCA試験の公式受験サイト・アクセスリクエスト</div>
+      </div>
+    </a>
+    <a href="https://docs.anthropic.com/ja/" target="_blank" rel="noopener" class="link-btn">
+      <span style="font-size:1.2rem">&#128218;</span>
+      <div>
+        <div class="link-title">docs.anthropic.com/ja</div>
+        <div class="link-desc">Anthropic公式ドキュメント（日本語）</div>
+      </div>
+    </a>
+    <a href="https://zenn.dev/datablizzard/articles/claude-cert-architect-guide" target="_blank" rel="noopener" class="link-btn">
+      <span style="font-size:1.2rem">&#128221;</span>
+      <div>
+        <div class="link-title">Zenn: Claude Certified Architect試験ガイド完全解説</div>
+        <div class="link-desc">ドメイン別の詳細解説とサンプル問題</div>
+      </div>
+    </a>
+    <a href="./index.html" class="link-btn">
+      <span style="font-size:1.2rem">&#9997;&#65039;</span>
+      <div>
+        <div class="link-title">問題集に戻る</div>
+        <div class="link-desc">80問のCCA練習問題でアウトプット練習</div>
+      </div>
+    </a>
+  </div>
+
+</div>
+
+<script>
+function toggleDark() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('cca-dark', isDark ? '1' : '0');
+}
+</script>
+</body>
+</html>

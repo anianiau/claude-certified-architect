@@ -49,6 +49,14 @@
   }
   .header h1 { font-size: 1.5rem; font-weight: 700; }
   .header p { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+  .header-nav {
+    display: flex; justify-content: center; gap: 16px; margin-top: 10px;
+  }
+  .header-nav a {
+    color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.82rem;
+    padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+  }
+  .header-nav a.active { background: rgba(255,255,255,0.2); color: #fff; }
   .container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
 
   .home-card {
@@ -371,6 +379,10 @@
   <h1>CCA 問題集</h1>
   <p>Claude Certified Architect 試験対策</p>
   <button class="dark-toggle" onclick="toggleDark()" title="ダークモード切替">&#9790;</button>
+  <nav class="header-nav">
+    <a href="./index.html" class="active">問題集</a>
+    <a href="./guide.html">試験ガイド</a>
+  </nav>
 </div>
 
 <div class="container">
