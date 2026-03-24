@@ -287,6 +287,21 @@
   .link-btn .link-title { font-weight: 600; }
   .link-btn .link-desc { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
 
+
+  /* 単語帳カテゴリ */
+  .glossary-category {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 4px 6px;
+    border-bottom: 2px solid var(--primary);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+  .glossary-category:first-child { margin-top: 8px; }
+
   /* 単語帳 */
   .glossary-item {
     border: 1px solid var(--border);
@@ -660,103 +675,7 @@
     <h2>単語帳</h2>
     <p>タップして解説を表示</p>
 
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>Few-shot（フューショット）</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「例を数個見せることでモデルに学習させる手法」</strong></p>
-        <p>AIに指示するとき、「こういう入力にはこういう出力」という例を2〜5個プロンプトに含めること。例を0個見せる場合はZero-shot、1個はOne-shot、複数はFew-shotと呼ぶ。</p>
-        <p style="margin-top:8px"><strong>例：</strong> 感情分類をさせたい場合<br>
-        「嬉しい」→ ポジティブ<br>
-        「悲しい」→ ネガティブ<br>
-        「最高の1日だった」→ ?（Claudeが続きを予測）</p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ツール選択の改善にFew-shotを使うのは非効率。ツール説明文の充実が先。</p>
-      </div>
-    </div>
-
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>コンテキストウィンドウ</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「AIが1回のリクエストで一度に読める情報量の上限」</strong></p>
-        <p>人間の「作業机の広さ」に例えられる。机が広いほど多くの資料を広げられるが、有限。Claudeは最大200,000トークン（日本語で約15万字相当）まで一度に処理できる。</p>
-        <p style="margin-top:8px"><strong>トークンとは：</strong>単語や文字の塊。英語は約3〜4文字で1トークン。日本語は1文字が1〜3トークン程度。</p>
-        <p style="margin-top:8px"><strong>入力 + 出力 = 合計トークン数</strong>が上限以内に収まる必要がある。</p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：上限に近づいたら自動要約・RAGで管理する設計が求められる。</p>
-      </div>
-    </div>
-
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>アテンション問題（Lost in the Middle）</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「長い文章の真ん中にある情報をAIが見落としやすい現象」</strong></p>
-        <p>人間が長い文書を読むとき、最初と最後は覚えているが途中を忘れがちなのと似ている。LLMも長いコンテキストの中間部分の情報を参照する精度が下がる。</p>
-        <p style="margin-top:8px"><strong>対策：</strong>重要な指示や情報はプロンプトの<strong>最初か最後</strong>に置く。コンテキストウィンドウを広げても解決しない（よくある誤解）。</p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「コンテキストウィンドウを広げれば解決する」という選択肢は✕。RAGや配置で解決する。</p>
-      </div>
-    </div>
-
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>stop_reason（ストップリーズン）</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「AIがなぜ出力を止めたかを示すフィールド」</strong></p>
-        <p>APIレスポンスに含まれる情報で、AIが出力を停止した理由を教えてくれる。</p>
-        <p style="margin-top:8px">
-          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"end_turn"</code> → 自然に完了した（ループ終了のサイン）<br>
-          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"tool_use"</code> → ツールを使いたいので一時停止<br>
-          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"max_tokens"</code> → トークン上限に達した<br>
-          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"stop_sequence"</code> → 指定の終了文字列に達した
-        </p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：エージェントループの終了判断は stop_reason のみを使う。「完了しましたと言っているから終了」という判断は✕。</p>
-      </div>
-    </div>
-
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>Tool Use / Function Calling</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「AIが外部のツールや関数を呼び出せる仕組み」</strong></p>
-        <p>通常のAIはテキストを返すだけだが、Tool Useを使うとAIが「このツールを呼んで」と指示を出せる。開発者がそのツールを実行して結果をAIに返すと、AIがその結果を元に次の行動を決める。</p>
-        <p style="margin-top:8px"><strong>例：</strong> 天気を聞かれたとき<br>
-        1. AIが <code style="background:var(--bg);padding:2px 5px;border-radius:3px">get_weather(city="東京")</code> を呼ぶよう指示<br>
-        2. 開発者側で天気APIを実行<br>
-        3. 結果「晴れ、25度」をAIに返す<br>
-        4. AIが「今日の東京は晴れで25度です」と回答</p>
-        <p style="margin-top:8px">AnthropicではTool Use、OpenAIではFunction Callingと呼ぶが同じ概念。</p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：最も出題頻度が高いトピック。スキーマ設計・エラー処理・並行呼び出しまで習得必須。</p>
-      </div>
-    </div>
-
-    <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term">
-        <span>Human-in-the-Loop（ヒューマンインザループ）</span>
-        <span class="glossary-arrow">›</span>
-      </div>
-      <div class="glossary-body">
-        <p><strong>「自動処理の途中に人間の確認・判断を挟む設計」</strong></p>
-        <p>AIが全自動でタスクを実行する中で、特定のポイントで人間に「これを実行してよいですか？」と確認を取る仕組み。</p>
-        <p style="margin-top:8px"><strong>必要な場面：</strong></p>
-        <ul style="list-style:none;padding:0">
-          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>メール送信・SNS投稿など、元に戻せないアクション</li>
-          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>データベースの更新・削除</li>
-          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>金融取引・契約の締結</li>
-          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>AIが「指示が曖昧で確信が持てない」と判断した場合</li>
-        </ul>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「全ステップで確認が必要」は✕。高リスク・不可逆なアクションの前だけに絞る設計が正解。</p>
-      </div>
-    </div>
+    <div class="glossary-category">Agentic Architecture（27%）</div>
 
     <div class="glossary-item" onclick="toggleGlossary(this)">
       <div class="glossary-term"><span>エージェントループ（Agentic Loop）</span><span class="glossary-arrow">›</span></div>
@@ -796,6 +715,22 @@
     </div>
 
     <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Human-in-the-Loop（ヒューマンインザループ）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「自動処理の途中に人間の確認・判断を挟む設計」</strong></p>
+        <p>AIが全自動でタスクを実行する中で、特定のポイントで人間に「これを実行してよいですか？」と確認を取る仕組み。</p>
+        <p style="margin-top:8px"><strong>必要な場面：</strong></p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>メール送信・SNS投稿など、元に戻せないアクション</li>
+          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>データベースの更新・削除</li>
+          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>金融取引・契約の締結</li>
+          <li style="padding:3px 0 3px 14px;position:relative;font-size:0.85rem;color:var(--text-light)"><span style="position:absolute;left:0">·</span>AIが「指示が曖昧で確信が持てない」と判断した場合</li>
+        </ul>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「全ステップで確認が必要」は✕。高リスク・不可逆なアクションの前だけに絞る設計が正解。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
       <div class="glossary-term"><span>チェックポイント（Checkpoint）</span><span class="glossary-arrow">›</span></div>
       <div class="glossary-body">
         <p><strong>「処理の途中経過を保存しておき、失敗時に途中から再開できる仕組み」</strong></p>
@@ -829,6 +764,23 @@
         <p><strong>「一次手段が失敗したときの代替手段を段階的に試みる設計」</strong></p>
         <p>①一次ツールの失敗 → 代替ツールを試みる → ②リトライ（指数バックオフ） → ③簡略化したアプローチで再試行 → ④全て失敗した場合のみ人間にエスカレーション、という段階的対応が理想。</p>
         <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「失敗したら即停止」は✕。段階的な回復設計が正解。</p>
+      </div>
+    </div>
+
+    <div class="glossary-category">Tool Design &amp; MCP（18%）</div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Tool Use / Function Calling</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIが外部のツールや関数を呼び出せる仕組み」</strong></p>
+        <p>通常のAIはテキストを返すだけだが、Tool Useを使うとAIが「このツールを呼んで」と指示を出せる。開発者がそのツールを実行して結果をAIに返すと、AIがその結果を元に次の行動を決める。</p>
+        <p style="margin-top:8px"><strong>例：</strong> 天気を聞かれたとき<br>
+        1. AIが <code style="background:var(--bg);padding:2px 5px;border-radius:3px">get_weather(city="東京")</code> を呼ぶよう指示<br>
+        2. 開発者側で天気APIを実行<br>
+        3. 結果「晴れ、25度」をAIに返す<br>
+        4. AIが「今日の東京は晴れで25度です」と回答</p>
+        <p style="margin-top:8px">AnthropicではTool Use、OpenAIではFunction Callingと呼ぶが同じ概念。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：最も出題頻度が高いトピック。スキーマ設計・エラー処理・並行呼び出しまで習得必須。</p>
       </div>
     </div>
 
@@ -892,6 +844,8 @@
       </div>
     </div>
 
+    <div class="glossary-category">Claude Code &amp; Workflows（20%）</div>
+
     <div class="glossary-item" onclick="toggleGlossary(this)">
       <div class="glossary-term"><span>CLAUDE.md</span><span class="glossary-arrow">›</span></div>
       <div class="glossary-body">
@@ -936,13 +890,21 @@
       </div>
     </div>
 
+    <div class="glossary-category">Prompt Engineering（20%）</div>
+
     <div class="glossary-item" onclick="toggleGlossary(this)">
-      <div class="glossary-term"><span>Prefill（事前充填）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-term">
+        <span>Few-shot（フューショット）</span>
+        <span class="glossary-arrow">›</span>
+      </div>
       <div class="glossary-body">
-        <p><strong>「AIの返答の書き始めをあらかじめ指定することで出力形式を強制する技法」</strong></p>
-        <p>messagesの最後に<code style="background:var(--bg);padding:1px 5px;border-radius:3px">role: "assistant"</code>のメッセージ（書き始め）を含めると、AIがその続きを生成する。</p>
-        <p style="margin-top:8px"><strong>例：</strong><code style="background:var(--bg);padding:1px 5px;border-radius:3px">{"role":"assistant","content":"{"}</code> と指定するとClaudeはJSONオブジェクトとして続きを生成する。</p>
-        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：構造化JSON出力を確実に得る手段の一つとして出題。</p>
+        <p><strong>「例を数個見せることでモデルに学習させる手法」</strong></p>
+        <p>AIに指示するとき、「こういう入力にはこういう出力」という例を2〜5個プロンプトに含めること。例を0個見せる場合はZero-shot、1個はOne-shot、複数はFew-shotと呼ぶ。</p>
+        <p style="margin-top:8px"><strong>例：</strong> 感情分類をさせたい場合<br>
+        「嬉しい」→ ポジティブ<br>
+        「悲しい」→ ネガティブ<br>
+        「最高の1日だった」→ ?（Claudeが続きを予測）</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ツール選択の改善にFew-shotを使うのは非効率。ツール説明文の充実が先。</p>
       </div>
     </div>
 
@@ -956,10 +918,22 @@
     </div>
 
     <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Prefill（事前充填）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIの返答の書き始めをあらかじめ指定することで出力形式を強制する技法」</strong></p>
+        <p>messagesの最後に<code style="background:var(--bg);padding:1px 5px;border-radius:3px">role: "assistant"</code>のメッセージ（書き始め）を含めると、AIがその続きを生成する。</p>
+        <p style="margin-top:8px"><strong>例：</strong><code style="background:var(--bg);padding:1px 5px;border-radius:3px">{"role":"assistant","content":"{"}</code> と指定するとClaudeはJSONオブジェクトとして続きを生成する。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：構造化JSON出力を確実に得る手段の一つとして出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
       <div class="glossary-term"><span>stop_sequences（ストップシーケンス）</span><span class="glossary-arrow">›</span></div>
       <div class="glossary-body">
         <p><strong>「この文字列が出力に現れたらAIの生成を止める、カスタム終了条件」</strong></p>
-        <p>例：<code style="background:var(--bg);padding:1px 5px;border-radius:3px">stop_sequences: ["&lt;/response&gt;", "\n\nHuman:"]</code> と設定すると、これらの文字列が生成された時点で出力を停止する。</p>
+        <p>例：<code style="background:var(--bg);padding:1px 5px;border-radius:3px">stop_sequences: ["&lt;/response&gt;", "
+
+Human:"]</code> と設定すると、これらの文字列が生成された時点で出力を停止する。</p>
         <p style="margin-top:8px"><strong>用途：</strong>Few-shotプロンプトでの応答境界制御・XMLタグによる出力の打ち切り・構造化出力の終了条件定義。</p>
         <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：stop_reasonの"stop_sequence"とセットで理解する。</p>
       </div>
@@ -987,6 +961,53 @@
         · キャッシュポイントは変わらないコンテンツの末尾に設置<br>
         · 最小トークン数要件あり（Sonnet/Opusは1024、Haikuは2048トークン未満はキャッシュされない）</p>
         <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ブレークポイントの配置場所と最小トークン要件が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-category">Context Management（15%）</div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term">
+        <span>コンテキストウィンドウ</span>
+        <span class="glossary-arrow">›</span>
+      </div>
+      <div class="glossary-body">
+        <p><strong>「AIが1回のリクエストで一度に読める情報量の上限」</strong></p>
+        <p>人間の「作業机の広さ」に例えられる。机が広いほど多くの資料を広げられるが、有限。Claudeは最大200,000トークン（日本語で約15万字相当）まで一度に処理できる。</p>
+        <p style="margin-top:8px"><strong>トークンとは：</strong>単語や文字の塊。英語は約3〜4文字で1トークン。日本語は1文字が1〜3トークン程度。</p>
+        <p style="margin-top:8px"><strong>入力 + 出力 = 合計トークン数</strong>が上限以内に収まる必要がある。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：上限に近づいたら自動要約・RAGで管理する設計が求められる。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term">
+        <span>アテンション問題（Lost in the Middle）</span>
+        <span class="glossary-arrow">›</span>
+      </div>
+      <div class="glossary-body">
+        <p><strong>「長い文章の真ん中にある情報をAIが見落としやすい現象」</strong></p>
+        <p>人間が長い文書を読むとき、最初と最後は覚えているが途中を忘れがちなのと似ている。LLMも長いコンテキストの中間部分の情報を参照する精度が下がる。</p>
+        <p style="margin-top:8px"><strong>対策：</strong>重要な指示や情報はプロンプトの<strong>最初か最後</strong>に置く。コンテキストウィンドウを広げても解決しない（よくある誤解）。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「コンテキストウィンドウを広げれば解決する」という選択肢は✕。RAGや配置で解決する。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term">
+        <span>stop_reason（ストップリーズン）</span>
+        <span class="glossary-arrow">›</span>
+      </div>
+      <div class="glossary-body">
+        <p><strong>「AIがなぜ出力を止めたかを示すフィールド」</strong></p>
+        <p>APIレスポンスに含まれる情報で、AIが出力を停止した理由を教えてくれる。</p>
+        <p style="margin-top:8px">
+          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"end_turn"</code> → 自然に完了した（ループ終了のサイン）<br>
+          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"tool_use"</code> → ツールを使いたいので一時停止<br>
+          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"max_tokens"</code> → トークン上限に達した<br>
+          <code style="background:var(--bg);padding:2px 6px;border-radius:4px">"stop_sequence"</code> → 指定の終了文字列に達した
+        </p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：エージェントループの終了判断は stop_reason のみを使う。「完了しましたと言っているから終了」という判断は✕。</p>
       </div>
     </div>
 
