@@ -508,6 +508,114 @@
     <p>コンテキストの劣化・エラー回復・コスト管理・セキュリティを含む「本番環境での信頼性」まで問われる。試験は開発者ではなくアーキテクトとしての責任を評価する。</p>
   </div>
 
+  <!-- 6大アンチパターン -->
+  <div class="section">
+    <h2>必ず覚える6大アンチパターン</h2>
+    <p>試験では「正しい設計」だけでなく「なぜその設計がダメか」を問う問題が多い。</p>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ Few-shotでツール実行順を制御する</div>
+      <ul>
+        <li>実行順序はコンプライアンス上の制約であり、プロンプトで「お願い」するものではない</li>
+        <li>正解：PreToolUseフックや前提条件チェックでプログラム的に強制する</li>
+      </ul>
+    </div>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ モデルの自己報告「確信度」でエスカレーションを判断する</div>
+      <ul>
+        <li>LLMの確信度スコアは、最も難しいケースほど正確に機能しない</li>
+        <li>正解：閾値・ルールベースなど決定論的なロジックでエスカレーションを制御する</li>
+      </ul>
+    </div>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ コスト削減のため全ワークフローをBatch APIに流す</div>
+      <ul>
+        <li>Batch APIにはSLA（応答時間保証）がない</li>
+        <li>正解：ユーザー向けのリアルタイムワークフローは通常のAPIを使う</li>
+      </ul>
+    </div>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ コンテキストウィンドウを広げてアテンション問題を解決する</div>
+      <ul>
+        <li>ウィンドウサイズを増やしてもLostintheMiddle問題は解決しない</li>
+        <li>正解：RAG・要約・重要情報の先頭/末尾配置で対処する</li>
+      </ul>
+    </div>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ サブエージェント失敗時に空の結果を返す</div>
+      <ul>
+        <li>コーディネーターが何が起きたか分からず回復できない</li>
+        <li>正解：構造化エラーコンテキスト（失敗理由・再試行可否）を返す</li>
+      </ul>
+    </div>
+
+    <div class="domain-card" style="border-left-color:#dc2626">
+      <div class="domain-title">❌ 全エージェントに全ツールを付与する</div>
+      <ul>
+        <li>不要なツールが選択される誤りが増え、信頼性が低下する</li>
+        <li>正解：各エージェントの役割に合わせてツールのスコープを絞る</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- stop_reason -->
+  <div class="section">
+    <h2>stop_reason がループ制御の唯一の正解</h2>
+    <p>エージェントループの終了判断は <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:0.85rem;">stop_reason</code> フィールドのみを信頼する。これは試験頻出。</p>
+
+    <div class="domain-card" style="border-left-color:#dc2626;margin-top:12px">
+      <div class="domain-title">❌ これらはすべて間違い</div>
+      <ul>
+        <li>テキスト解析（「完了しました」という文言で判断する）</li>
+        <li>繰り返し回数の上限だけでループを制御する（安全網としてはOK）</li>
+        <li>tool_useブロックと同時にテキストが返るかどうかで判断する</li>
+      </ul>
+    </div>
+    <div class="domain-card" style="border-left-color:#16a34a;margin-top:8px">
+      <div class="domain-title">✅ 正解</div>
+      <ul>
+        <li><code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-size:0.83rem;">stop_reason === "end_turn"</code> のみがループ終了の確定的シグナル</li>
+        <li>ツール結果は必ず会話履歴に追加してから次のイテレーションに進む</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 出題シナリオ -->
+  <div class="section">
+    <h2>本番で出題される6つのシナリオ</h2>
+    <p>60問は6つのシナリオから構成。本番では6つのうち4つが出題される。すべて対策すること。</p>
+    <div class="domain-card">
+      <ul>
+        <li><strong>シナリオ1：</strong>カスタマーサポート解決エージェント</li>
+        <li><strong>シナリオ2：</strong>Claude Codeによるコード生成</li>
+        <li><strong>シナリオ3：</strong>マルチエージェント調査システム</li>
+        <li><strong>シナリオ4：</strong>開発者生産性向上ワークフロー</li>
+        <li><strong>シナリオ5：</strong>Claude Code × CI/CD統合</li>
+        <li><strong>シナリオ6：</strong>構造化データ抽出パイプライン</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 高得点者のアドバイス -->
+  <div class="section">
+    <h2>985点取得者のアドバイス</h2>
+    <ul class="tip-list">
+      <li data-num="1">Tool Use / Function Callingが最も出題される — 徹底的に習得する</li>
+      <li data-num="2">MCPは「概念として知っている」ではなく実装レベルで理解する</li>
+      <li data-num="3">コンテキスト最適化は理論ではなく実践的に問われる（いつ・何を削るか）</li>
+      <li data-num="4">Human-in-the-Loopは「いつ・どのように」挿入するかをシナリオで問われる</li>
+      <li data-num="5">試験は完全クローズドブック — AIアシスタント・ネット検索は一切不可</li>
+      <li data-num="6">経験者は20〜30時間（2〜4週間）の集中学習で合格できる</li>
+    </ul>
+
+    <h3 style="margin-top:16px">出題されない範囲（スコープ外）</h3>
+    <p>モデルの内部構造・ファインチューニング・料金体系・競合製品・一般的なML理論・インフラ設定・UI設計・詳細なコンプライアンス規制</p>
+  </div>
+
   <!-- 公式リンク -->
   <div class="section">
     <h2>公式リソース</h2>
