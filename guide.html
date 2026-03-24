@@ -757,6 +757,294 @@
         <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「全ステップで確認が必要」は✕。高リスク・不可逆なアクションの前だけに絞る設計が正解。</p>
       </div>
     </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>エージェントループ（Agentic Loop）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIが目標を達成するまで自律的に考えて行動し続けるサイクル」</strong></p>
+        <p>入力を受け取る → ツールを使うか判断 → ツールを実行 → 結果を観察 → 目標を達成したか判断、という一連のサイクルを繰り返す。<code style="background:var(--bg);padding:1px 5px;border-radius:3px">stop_reason === "end_turn"</code> になるまで継続する。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ループの終了条件・コスト爆発防止・ループ検出の設計が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>オーケストレーター / サブエージェント</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「指揮官（オーケストレーター）と実行担当（サブエージェント）の役割分担」</strong></p>
+        <p>オーケストレーターはゴールをサブタスクに分解して専門のサブエージェントに指示を出す上位エージェント。サブエージェントは与えられたサブタスクを実際に実行する下位エージェント。</p>
+        <p style="margin-top:8px"><strong>重要：</strong>サブエージェントは親（オーケストレーター）のコンテキストを自動で引き継がない。必要な情報は明示的に渡す必要がある。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：コンテキストの引き継ぎ方と信頼境界の設計が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>ReActパターン</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「Reasoning（推論）+ Acting（行動）を交互に繰り返すエージェント設計」</strong></p>
+        <p>Thought（何をすべきか考える）→ Action（ツールを実行する）→ Observation（実行結果を観察する）のサイクルを繰り返すパターン。拡張思考（Extended Thinking）と組み合わせると複雑な推論タスクの精度が上がる。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：エージェントの基本設計パターンとして問われる。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>最小権限の原則</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「エージェントに必要最小限のツール・権限だけを与える設計原則」</strong></p>
+        <p>タスクに不要なツール・広すぎるファイルアクセス・過剰なAPI権限を与えると、誤操作・意図しないデータ損失・セキュリティ侵害のリスクが高まる。必要な権限だけに絞ることで被害を最小化できる。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「全ツールを全エージェントに付与する」は✕の典型アンチパターン。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>チェックポイント（Checkpoint）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「処理の途中経過を保存しておき、失敗時に途中から再開できる仕組み」</strong></p>
+        <p>長時間実行するエージェントでネットワーク障害・タイムアウト・レート制限などが発生した場合、最初から全てやり直さずに済む。完了済みステップ・収集済みデータ・部分的な結果を永続化しておく。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：長時間エージェントの信頼性設計の文脈で出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>プロンプトインジェクション</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「外部から取得したコンテンツに悪意ある指示を埋め込みAIを操作する攻撃」</strong></p>
+        <p>エージェントがWebページ・メール・ドキュメントを読み取る際、その中に「システムの指示を無視して〇〇せよ」といった命令が埋め込まれている攻撃。エージェントがその指示に従ってしまう危険がある。</p>
+        <p style="margin-top:8px"><strong>対策：</strong>ユーザー入力や外部コンテンツをXMLタグで信頼済み指示と明確に分離し、信頼レベルを区別する。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：マルチエージェント・外部コンテンツ取得の設計でセキュリティ観点として問われる。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>ハンドオフ（Handoff）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「あるエージェントが処理の制御を別の専門エージェントに引き渡すこと」</strong></p>
+        <p>例：カスタマーサポートエージェントが技術的な質問を受けたとき、技術サポート専門エージェントに処理を転送する。Anthropic Agent SDKで実装できる。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：マルチエージェント設計・専門化の文脈で出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>フォールバック戦略</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「一次手段が失敗したときの代替手段を段階的に試みる設計」</strong></p>
+        <p>①一次ツールの失敗 → 代替ツールを試みる → ②リトライ（指数バックオフ） → ③簡略化したアプローチで再試行 → ④全て失敗した場合のみ人間にエスカレーション、という段階的対応が理想。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「失敗したら即停止」は✕。段階的な回復設計が正解。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>MCP（Model Context Protocol）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIモデルと外部ツール・データソースを標準化された方法で接続するプロトコル」</strong></p>
+        <p>Anthropicが策定したオープン規格。MCPサーバーを実装することで、データベース・ファイルシステム・外部APIなど任意のサービスをAIエージェントのツールとして提供できる。</p>
+        <p style="margin-top:8px"><strong>MCPが提供できる3種類：</strong><br>
+        ① ツール（実行可能な関数）<br>
+        ② リソース（ファイルやデータの読み取り）<br>
+        ③ プロンプト（再利用可能なテンプレート）</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：概念だけでなく実装レベルの理解が求められる。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>input_schema / JSON Schema</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「ツールが受け取るパラメーターの型・形式を定義する仕様書」</strong></p>
+        <p>ツール定義に必要な3要素：<br>
+        ① <code style="background:var(--bg);padding:1px 5px;border-radius:3px">type: "object"</code>（必須）<br>
+        ② <code style="background:var(--bg);padding:1px 5px;border-radius:3px">properties</code>（各パラメーターの型・説明）<br>
+        ③ <code style="background:var(--bg);padding:1px 5px;border-radius:3px">required</code>（必須パラメーターの配列）</p>
+        <p style="margin-top:8px">descriptionが充実しているほど、モデルが正しく使える。enumで有効な値の集合を示すと誤選択が減る。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ツール設計の基本として頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>tool_choice（auto / any / tool）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「モデルがツールを使うかどうかを制御するパラメーター」</strong></p>
+        <p>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">"auto"</code> → モデルが自律的にツール使用を判断（デフォルト）<br>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">"any"</code> → 提供されたツールのどれかを必ず使う<br>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">"tool"</code> → 特定のツールを必ず使う（name指定）<br>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">"none"</code> → ツールを使わない
+        </p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：構造化データ抽出でtool_choice=toolを使い強制する設計が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>is_error フラグ</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「ツール実行でエラーが起きたことをAIに伝えるフラグ」</strong></p>
+        <p>ツールが失敗したとき、<code style="background:var(--bg);padding:1px 5px;border-radius:3px">is_error: true</code> とエラー内容をtool_resultに含めてAIに返す。AIはエラー情報を受け取り代替手段の提案や別のアプローチを試みる。</p>
+        <p style="margin-top:8px"><strong>✕ 悪い例：</strong>エラーを無視して空の結果を返す → コーディネーターが何が起きたか分からない<br>
+        <strong>✅ 正解：</strong>is_error:true + エラー詳細 + 再試行可否を返す</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：エラー設計のアンチパターンとして出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>並行ツール呼び出し（Parallel Tool Use）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIが複数のツールを同時に実行するよう指示する機能」</strong></p>
+        <p>ClaudeがAPIレスポンスで複数の<code style="background:var(--bg);padding:1px 5px;border-radius:3px">tool_use</code>ブロックを返すことがある。この場合、それぞれを並行実行し、全ての結果を個別の<code style="background:var(--bg);padding:1px 5px;border-radius:3px">tool_result</code>ブロックとして同一メッセージに含めて返す必要がある。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「最初のツールだけ実行する」は✕。全ツールを並行実行して全結果を返すのが正解。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>CLAUDE.md</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「プロジェクト固有のルール・コンテキストをClaude Codeに伝えるファイル」</strong></p>
+        <p>プロジェクトルートに置くMarkdownファイル。Claude Codeが自動的に読み込む。プロジェクトの概要・コーディング規約・ビルド手順・禁止事項などを記述する。</p>
+        <p style="margin-top:8px"><strong>2種類の場所：</strong><br>
+        <code style="background:var(--bg);padding:1px 5px;border-radius:3px">~/.claude/CLAUDE.md</code> → 全プロジェクト共通のグローバル設定<br>
+        <code style="background:var(--bg);padding:1px 5px;border-radius:3px">.claude/CLAUDE.md</code> → プロジェクト固有の設定（Gitで共有可能）</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：APIキー等の秘密情報は絶対に書かない。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Hooks（PreToolUse / PostToolUse）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「ツール実行の前後に任意のシェルコマンドを自動実行する仕組み」</strong></p>
+        <p>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">PreToolUse</code> → ツール実行直前に起動。危険なコマンドの確認・自動拒否・監査ログ記録に使う<br>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">PostToolUse</code> → ツール実行直後に起動。コードフォーマット・テスト自動実行に使う<br>
+          <code style="background:var(--bg);padding:2px 5px;border-radius:3px">Stop</code> → セッション終了時に起動
+        </p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：高リスク操作の前にプログラム的な制御を実装する手段として出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Planモード</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「実行前に計画を立ててユーザーに確認してから作業するモード」</strong></p>
+        <p>大規模な変更・リファクタリング・複数ファイルへの影響が出る作業など、慎重に進めたい場合に使う。直接実行（単純タスク）と使い分けることが設計上重要。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：どの場面でPlanモードを使うべきかの判断が問われる。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>拒否リスト / 許可リスト（deny / allow list）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「Claude Codeが実行できるツールを制御するリスト」</strong></p>
+        <p>settings.jsonの<code style="background:var(--bg);padding:1px 5px;border-radius:3px">permissions.allow</code>と<code style="background:var(--bg);padding:1px 5px;border-radius:3px">permissions.deny</code>で設定する。</p>
+        <p style="margin-top:8px"><strong>重要な優先順位：拒否リストが許可リストより優先される。</strong>同じパターンが両方にある場合は必ず拒否が勝つ。セキュリティ上重要なツールは明示的に拒否リストに追加する。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：優先順位の問題（拒否 &gt; 許可）が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Prefill（事前充填）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIの返答の書き始めをあらかじめ指定することで出力形式を強制する技法」</strong></p>
+        <p>messagesの最後に<code style="background:var(--bg);padding:1px 5px;border-radius:3px">role: "assistant"</code>のメッセージ（書き始め）を含めると、AIがその続きを生成する。</p>
+        <p style="margin-top:8px"><strong>例：</strong><code style="background:var(--bg);padding:1px 5px;border-radius:3px">{"role":"assistant","content":"{"}</code> と指定するとClaudeはJSONオブジェクトとして続きを生成する。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：構造化JSON出力を確実に得る手段の一つとして出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>Chain-of-Thought（CoT）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIに推論の過程を段階的に示させることで回答精度を上げる手法」</strong></p>
+        <p>「ステップバイステップで考えてください」という指示でモデルに思考プロセスを出力させる。数学的計算・論理パズル・多段階の因果推論・複雑な計画立案で特に効果的。単純なタスクでは逆にオーバーヘッドになる。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：どの場面でCoTが有効かを判断する問題が出る。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>stop_sequences（ストップシーケンス）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「この文字列が出力に現れたらAIの生成を止める、カスタム終了条件」</strong></p>
+        <p>例：<code style="background:var(--bg);padding:1px 5px;border-radius:3px">stop_sequences: ["&lt;/response&gt;", "\n\nHuman:"]</code> と設定すると、これらの文字列が生成された時点で出力を停止する。</p>
+        <p style="margin-top:8px"><strong>用途：</strong>Few-shotプロンプトでの応答境界制御・XMLタグによる出力の打ち切り・構造化出力の終了条件定義。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：stop_reasonの"stop_sequence"とセットで理解する。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>temperature / top_p</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIの出力のランダム性・多様性を制御するパラメーター」</strong></p>
+        <p><strong>temperature：</strong><br>
+        0に近い → 毎回ほぼ同じ決定論的な出力（コーディング・事実確認向き）<br>
+        1に近い → 毎回異なる多様・創造的な出力（創作・ブレインストーミング向き）</p>
+        <p style="margin-top:8px"><strong>top_p（nucleus sampling）：</strong><br>
+        累積確率がp値に達するまでのトークン候補集合から選択する。top_p=0.9なら確率上位90%のトークンから選ぶ。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：temperatureとtop_pは通常どちらか一方だけ変更する。両方同時に変えるのは非推奨。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>プロンプトキャッシング（Prompt Caching）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「繰り返し使う長いプロンプトをキャッシュしてコストと時間を削減する機能」</strong></p>
+        <p>同じ長いシステムプロンプト・参照ドキュメント・コードベースを毎回送る代わりに、キャッシュしておき2回目以降は再利用する。入力コストを最大90%削減できる。</p>
+        <p style="margin-top:8px"><strong>設定の注意点：</strong><br>
+        · キャッシュポイントは変わらないコンテンツの末尾に設置<br>
+        · 最小トークン数要件あり（Sonnet/Opusは1024、Haikuは2048トークン未満はキャッシュされない）</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：ブレークポイントの配置場所と最小トークン要件が頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>RAG（Retrieval-Augmented Generation）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「外部の知識データベースから関連情報を検索してAIに渡す手法」</strong></p>
+        <p>大量のドキュメントを全部コンテキストに入れるのではなく、ベクトルデータベースなどに保存しておき、質問に関連する部分だけを検索してAIに渡す。コンテキストウィンドウの節約とコスト削減に有効。</p>
+        <p style="margin-top:8px"><strong>例：</strong>社内マニュアル1,000ページ全体を毎回送る代わりに、質問に近い5ページだけを検索して渡す。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：大規模コードベース処理・コンテキスト効率化の正解手段として頻出。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>ステートレス API</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「サーバー側に会話の状態が保存されず、毎回全履歴を送る必要があるAPI設計」</strong></p>
+        <p>AnthropicのAPIはリクエストをまたいで会話履歴を記憶しない。マルチターン会話を実現するには、クライアント側でmessages配列（userとassistantが交互）を管理して毎回全履歴を含めて送る必要がある。</p>
+        <p style="margin-top:8px"><strong>結果：</strong>会話が長くなるほどトークン消費（コスト）が増加する。要約やトリミングによるコンテキスト管理が必要になる。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：コンテキスト管理が必要な根本的な理由として理解する。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>トークン（Token）</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「AIがテキストを処理する最小単位。料金計算の基準」</strong></p>
+        <p>単語や文字の塊。英語は平均3〜4文字で1トークン。日本語は1文字が1〜3トークン程度になることが多く、英語より多くのトークンを消費する。</p>
+        <p style="margin-top:8px"><strong>正確なトークン数の計測：</strong>Anthropicのtokencount API（<code style="background:var(--bg);padding:1px 5px;border-radius:3px">/v1/messages/count_tokens</code>）またはSDKの<code style="background:var(--bg);padding:1px 5px;border-radius:3px">count_tokens</code>メソッドを使う。「文字数÷4」などの近似は不正確。</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：トークン見積もりの正しい方法と、コンテキストウィンドウ管理の文脈で出題。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>要約（Summarization）のトレードオフ</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「会話を要約するとコンテキストは節約できるが、細部が失われるリスクがある」</strong></p>
+        <p>長い会話を要約するとコンテキストウィンドウを解放できる一方で、具体的な数値・固有名詞・決定事項の詳細が失われる可能性がある。</p>
+        <p style="margin-top:8px"><strong>対策：</strong><br>
+        · 重要な事実は箇条書きで明示的に保持<br>
+        · 要約の品質を定期的に検証<br>
+        · 重要な決定事項は要約から除外する</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：「要約すれば全情報が保持される」は✕。細部が失われるリスクが正解。</p>
+      </div>
+    </div>
+
+    <div class="glossary-item" onclick="toggleGlossary(this)">
+      <div class="glossary-term"><span>プロンプトキャッシュのブレークポイント</span><span class="glossary-arrow">›</span></div>
+      <div class="glossary-body">
+        <p><strong>「キャッシュの区切り位置。どこまでをキャッシュするかを指定するマーカー」</strong></p>
+        <p>プロンプトキャッシングを使うとき、キャッシュしたい部分の末尾に<code style="background:var(--bg);padding:1px 5px;border-radius:3px">cache_control: {"type": "ephemeral"}</code>を設定する。</p>
+        <p style="margin-top:8px"><strong>重要な制約：</strong><br>
+        · 変わらないコンテンツの末尾に設置する（動的なコンテンツの前には置かない）<br>
+        · 最小トークン数未満はキャッシュされない（Sonnet/Opus: 1024、Haiku: 2048）<br>
+        · キャッシュの有効期限は5分（最後のアクセスから）</p>
+        <p style="margin-top:8px;color:#7c3aed;font-weight:600">試験では：配置場所・最小トークン・有効期限の3点が問われる。</p>
+      </div>
+    </div>
   </div>
 
   <!-- 公式リンク -->
